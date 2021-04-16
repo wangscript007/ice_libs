@@ -259,9 +259,10 @@ ICE_EASINGS_API double ICE_EASINGS_CALLCONV ice_easings_elastic_out(double t, do
     double s = p / 4;
     
     if (t < 1) {
-		double postFix = a * pow(2, 10 * (t -= 1));
-		return -0.5 * (postFix * sin((t * d - s) * (2 * PI) / p)) + b;
-	} 
+        double postFix = a * pow(2, 10 * (t -= 1));
+        return -0.5 * (postFix * sin((t * d - s) * (2 * PI) / p)) + b;
+	}
+    
 	double postFix = a * pow(2, -10 * (t -= 1));
 	return postFix * sin((t * d - s) * (2 * PI) / p) * 0.5 + c + b;
 }
@@ -275,9 +276,10 @@ ICE_EASINGS_API double ICE_EASINGS_CALLCONV ice_easings_elastic_in_out(double t,
     double s = p / 4;
     
     if (t < 1) {
-		double postFix = a * pow(2, 10 * (t -= 1));
-		return -0.5 * (postFix * sin((t * d - s) * (2 * PI) / p)) + b;
-	} 
+        double postFix = a * pow(2, 10 * (t -= 1));
+        return -0.5 * (postFix * sin((t * d - s) * (2 * PI) / p)) + b;
+	}
+    
 	double postFix = a * pow(2, -10 * (t -= 1));
 	return postFix * sin((t * d - s) * (2 * PI) / p) * 0.5 + c + b;
 }
@@ -320,14 +322,14 @@ ICE_EASINGS_API double ICE_EASINGS_CALLCONV ice_easings_expo_out(double t, doubl
 
 ICE_EASINGS_API double ICE_EASINGS_CALLCONV ice_easings_expo_in_out(double t, double b, double c, double d) {
     if (t == 0) return b;
-	if (t == d) return b + c;
-	if ((t /= d / 2) < 1) return c / 2 * pow(2, 10 * (t - 1)) + b;
-	return c / 2 * (-pow(2, -10 * --t) + 2) + b;
+    if (t == d) return b + c;
+    if ((t /= d / 2) < 1) return c / 2 * pow(2, 10 * (t - 1)) + b;
+    return c / 2 * (-pow(2, -10 * --t) + 2) + b;
 }
 
 ICE_EASINGS_API double ICE_EASINGS_CALLCONV ice_easings_back_in(double t, double b, double c, double d) {
     static double s = 1.70158;
-	return c * (t /= d) * t * ((s + 1) * t - s) + b;
+    return c * (t /= d) * t * ((s + 1) * t - s) + b;
 }
 
 ICE_EASINGS_API double ICE_EASINGS_CALLCONV ice_easings_back_out(double t, double b, double c, double d) {
@@ -339,7 +341,7 @@ ICE_EASINGS_API double ICE_EASINGS_CALLCONV ice_easings_back_in_out(double t, do
     static double s = 1.70158;
     static double v = 1.525;
     if ((t /= d / 2) < 1) return c / 2 * (t * t * (((s *= v) + 1) * t - s)) + b;
-	return c / 2 * ((t -= 2) * t * (((s *= v) + 1) * t + s) + 2) + b;
+    return c / 2 * ((t -= 2) * t * (((s *= v) + 1) * t + s) + 2) + b;
 }
 
 ICE_EASINGS_API double ICE_EASINGS_CALLCONV ice_easings_bounce_in(double t, double b, double c, double d) {
@@ -351,19 +353,19 @@ ICE_EASINGS_API double ICE_EASINGS_CALLCONV ice_easings_bounce_out(double t, dou
     static double d1 = 2.75;
     
     if ((t /= d) < (1 / d1)) {
-		return c * (n1 * t * t) + b;
-	} else if (t < (2 / d1)) {
-		return c * (n1 * (t -= (1.5 / d1)) * t + 0.75) + b;
-	} else if (t < (2.5 / d1)) {
-		return c * (n1 * (t -= (2.25 / d1)) * t + 0.9375) + b;
-	} else {
-		return c * (n1 * (t -= (2.625 / d1)) * t + 0.984375) + b;
-	}
+        return c * (n1 * t * t) + b;
+    } else if (t < (2 / d1)) {
+        return c * (n1 * (t -= (1.5 / d1)) * t + 0.75) + b;
+    } else if (t < (2.5 / d1)) {
+        return c * (n1 * (t -= (2.25 / d1)) * t + 0.9375) + b;
+    } else {
+        return c * (n1 * (t -= (2.625 / d1)) * t + 0.984375) + b;
+    }
 }
 
 ICE_EASINGS_API double ICE_EASINGS_CALLCONV ice_easings_bounce_in_out(double t, double b, double c, double d) {
     if (t < d / 2) return ice_easings_bounce_in(t * 2, 0, c, d) * 0.5 + b;
-	return ice_easings_bounce_out(t * 2 - d, 0, c, d) * 0.5 + c * 0.5 + b;
+    return ice_easings_bounce_out(t * 2 - d, 0, c, d) * 0.5 + c * 0.5 + b;
 }
 
 #endif  // ICE_EASINGS_IMPL
