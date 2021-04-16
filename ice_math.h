@@ -277,12 +277,12 @@ extern "C" {
 #define ICE_MATH_SEC_360                1
 #define ICE_MATH_CSC_360                ICE_MATH_UNDEFINED
 
-#define ICE_MATH_UPPER_MASK		        0x80000000
-#define ICE_MATH_LOWER_MASK		        0x7fffffff
-#define ICE_MATH_TEMPERING_MASK_B	    0x9d2c5680
-#define ICE_MATH_TEMPERING_MASK_C	    0xefc60000
+#define ICE_MATH_UPPER_MASK             0x80000000
+#define ICE_MATH_LOWER_MASK             0x7fffffff
+#define ICE_MATH_TEMPERING_MASK_B       0x9d2c5680
+#define ICE_MATH_TEMPERING_MASK_C       0xefc60000
 #define ICE_MATH_STATE_VECTOR_LENGTH    624
-#define ICE_MATH_STATE_VECTOR_M         397 /* changes to ICE_MATH_STATE_VECTOR_LENGTH also require changes to this */
+#define ICE_MATH_STATE_VECTOR_M         397         // changes to ICE_MATH_STATE_VECTOR_LENGTH also require changes to this
 
 typedef enum {
     ICE_MATH_TRUE = 0,
