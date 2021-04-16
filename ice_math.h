@@ -339,8 +339,8 @@ typedef struct ice_math_mat {
 } ice_math_mat;
 
 typedef struct ice_math_mtrand {
-  unsigned long mt[ICE_MATH_STATE_VECTOR_LENGTH];
-  int index;
+    unsigned long mt[ICE_MATH_STATE_VECTOR_LENGTH];
+    int index;
 } ice_math_mtrand;
 
 ///////////////////////////////////////////////////////////////////////////////////////////
