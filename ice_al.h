@@ -38,10 +38,6 @@ Define ICE_AL_IMPL Then include ice_al.h in your C/C++ code!
 #ifndef ICE_AL_H
 #define ICE_AL_H
 
-#if defined(_AL_H) || defined(_ALC_H)
-#  error "OpenAL included twice! ice_al already provides OpenAL!"
-#endif
-
 // Define C interface for Windows libraries! ;)
 #ifndef CINTERFACE
 #  define CINTERFACE
