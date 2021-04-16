@@ -401,11 +401,11 @@ ICE_CLIPBOARD_API ice_clipboard_bool ICE_CLIPBOARD_CALLCONV ice_clipboard_init(v
     TEXT        = XInternAtom(display, "TEXT", 0);
     UTF8        = XInternAtom(display, "UTF8_STRING", True);
     CLIPBOARD   = XInternAtom(display, "CLIPBOARD", 0);
-	XSEL_DATA   = XInternAtom(display, "XSEL_DATA", 0);
+    XSEL_DATA   = XInternAtom(display, "XSEL_DATA", 0);
     
     if (UTF8 != None) {
         copy_type = UTF8;
-	} else {
+    } else {
         copy_type = XA_STRING;
     }
     
@@ -417,7 +417,7 @@ ICE_CLIPBOARD_API ice_clipboard_bool ICE_CLIPBOARD_CALLCONV ice_clipboard_set(ch
     XSetSelectionOwner(display, CLIPBOARD, NULL, 0);
     
     while (1) {
-        XNextEvent (display, &event);
+        XNextEvent(display, &event);
         if (event.type == SelectionRequest) {
             if (event.xselectionrequest.selection != CLIPBOARD) break;
             XSelectionRequestEvent * xsr = &event.xselectionrequest;
@@ -428,39 +428,39 @@ ICE_CLIPBOARD_API ice_clipboard_bool ICE_CLIPBOARD_CALLCONV ice_clipboard_set(ch
             
             if (ev.target == targets_atom) {
                 R = XChangeProperty(ev.display, ev.requestor, ev.property, XA_ATOM, 32, PropModeReplace, (unsigned char*)&UTF8, 1);
-			} else if (ev.target == XA_STRING || ev.target == text_atom) {
-				R = XChangeProperty(ev.display, ev.requestor, ev.property, XA_STRING, 8, PropModeReplace, text, strlen(text));
-			} else if (ev.target == UTF8) {
-				R = XChangeProperty(ev.display, ev.requestor, ev.property, UTF8, 8, PropModeReplace, text, strlen(text));
-			} else {
+            } else if (ev.target == XA_STRING || ev.target == text_atom) {
+                R = XChangeProperty(ev.display, ev.requestor, ev.property, XA_STRING, 8, PropModeReplace, text, strlen(text));
+            } else if (ev.target == UTF8) {
+                R = XChangeProperty(ev.display, ev.requestor, ev.property, UTF8, 8, PropModeReplace, text, strlen(text));
+            } else {
                 ev.property = None;
-			}
+            }
             
             if ((R & 2) == 0) XSendEvent(display, ev.requestor, 0, 0, (XEvent *)&ev);
-			break;
-			case SelectionClear:
-			return;
+            break;
+		} else if (event.type == SelectionClear) {
+            return ICE_CLIPBOARD_TRUE;
 		}
 	}
 }
 
 ICE_CLIPBOARD_API char* ICE_CLIPBOARD_CALLCONV ice_clipboard_get(void) {
     XEvent event;
-	int format;
-	unsigned long N, size;
-	char* data, *s = 0;
-	Atom target;
+    int format;
+    unsigned long N, size;
+    char* data, *s = 0;
+    Atom target;
 	
-	XConvertSelection(display, CLIPBOARD, copy_type, XSEL_DATA, NULL, CurrentTime);
-	XSync(display, 0);
-	XNextEvent(display, &event);
+    XConvertSelection(display, CLIPBOARD, copy_type, XSEL_DATA, NULL, CurrentTime);
+    XSync(display, 0);
+    XNextEvent(display, &event);
 	
-	if (event.type == SelectionNotify) {
-		if(event.xselection.selection != CLIPBOARD) break;
-        if(event.xselection.property) {
+    if (event.type == SelectionNotify) {
+        if (event.xselection.selection != CLIPBOARD) break;
+        if (event.xselection.property) {
             XGetWindowProperty(event.xselection.display, event.xselection.requestor, event.xselection.property, 0L,(~0L), 0, AnyPropertyType, &target, &format, &size, &N,(unsigned char**)&data);
             
-            if(target == UTF8 || target == XA_STRING) {
+            if (target == UTF8 || target == XA_STRING) {
                 s = strndup(data, size);
                 XFree(data);
             }
