@@ -8,8 +8,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////
 /*
 [1] BRIEF:
-ice_ram is cross-platform single-header C library for working with shared libraries and get
-addresses from them without hassle.
+ice_ram is cross-platform single-header C library to get free and total RAM!
 
 Works on:
 
