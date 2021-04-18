@@ -6,3 +6,4 @@
 - [ice_joy.h Documentation](ice_joy_api.md)
 - [ice_math.h Documentation](ice_math_api.md)
 - [ice_time.h Documentation](ice_time_api.md)
+- [ice_ram.h Documentation](ice_ram_api.md)
