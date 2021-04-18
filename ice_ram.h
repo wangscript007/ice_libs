@@ -13,11 +13,10 @@ ice_ram is Single-Header Cross-Platform C library to get free and total RAM!
 Works on:
 
 1. Windows and Xbox platforms
-2. OSX
-3. iOS
-4. Linux (Including BeOS, Haiku, Android)
-5. Emscripten
-6. PSP
+2. Apple platforms
+3. Linux (Including BeOS, Haiku, Android, And any Linux-based System)
+4. Emscripten
+5. PSP
 
 [2] IMPLEMENTATION:
 Windows             -> GlobalMemoryStatusEx
@@ -143,9 +142,14 @@ extern "C" {
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////////////////
+// ice_ram DEFINITIONS
+///////////////////////////////////////////////////////////////////////////////////////////
+
+typedef unsigned long long int ice_ram_bytes;
+
+///////////////////////////////////////////////////////////////////////////////////////////
 // ice_ram API
 ///////////////////////////////////////////////////////////////////////////////////////////
-typedef unsigned long long int ice_ram_bytes;
 
 ICE_RAM_API  ice_ram_bytes  ICE_RAM_CALLCONV  ice_ram_total(void);           // Returns total memory (RAM) device has, In bytes.
 ICE_RAM_API  ice_ram_bytes  ICE_RAM_CALLCONV  ice_ram_free(void);            // Returns available/free memory (RAM) device has, In bytes.
