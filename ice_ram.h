@@ -23,6 +23,7 @@ Windows             -> GlobalMemoryStatusEx
 Apple               -> host_statistics (mach.h and mach_host.h)
 Unix                -> sysinfo
 Emscripten          -> os module (Node.js), window.performance.memory + navigator.deviceMemory (Web)
+PSP                 -> sceKernelTotalFreeMemSize (pspdev/pspsdk)
 
 [3] USAGE:
 Define ICE_RAM_IMPL Then include ice_ram.h in your C/C++ code!
