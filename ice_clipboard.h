@@ -438,10 +438,10 @@ ICE_CLIPBOARD_API ice_clipboard_bool ICE_CLIPBOARD_CALLCONV ice_clipboard_set(ch
             
             if ((R & 2) == 0) XSendEvent(display, ev.requestor, 0, 0, (XEvent *)&ev);
             break;
-		} else if (event.type == SelectionClear) {
+        } else if (event.type == SelectionClear) {
             return ICE_CLIPBOARD_TRUE;
-		}
-	}
+        }
+    }
 }
 
 ICE_CLIPBOARD_API char* ICE_CLIPBOARD_CALLCONV ice_clipboard_get(void) {
