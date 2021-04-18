@@ -13,11 +13,10 @@ ice_ram is Single-Header Cross-Platform C library to get free and total RAM!
 Works on:
 
 1. Windows and Xbox platforms
-2. OSX
-3. iOS
-4. Linux (Including BeOS, Haiku, Android)
-5. Emscripten
-6. PSP
+2. Apple platforms
+3. Linux (Including BeOS, Haiku, Android, And any Linux-based System)
+4. Emscripten
+5. PSP
 
 [2] IMPLEMENTATION:
 Windows             -> GlobalMemoryStatusEx
