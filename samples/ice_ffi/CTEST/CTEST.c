@@ -19,11 +19,13 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-	DLLEXPORT inline int test(void);
 
-	DLLEXPORT inline int test(void) {
-		return 42;
-	}
+DLLEXPORT inline int test(void);
+
+DLLEXPORT inline int test(void) {
+    return 42;
+}
+
 #ifdef __cplusplus
 }
 #endif
