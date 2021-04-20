@@ -16,4 +16,4 @@ Collection of cross-platform single-header C libraries for doing a lot of stuff!
 | [ice_steam.h](https://github.com/Rabios/ice_libs/raw/master/ice_steam.h)              | Cross-Platform Single-Header Steamworks API loader               | Steamworks API supported platforms                           | C             |
 | [ice_test.h](https://github.com/Rabios/ice_libs/raw/master/ice_test.h)                | Cross-Platform Single-Header Tiny unit testing lib               | Anywhere                                                     | C             |
 
-> NOTE: Unix-based platform means Linux, iOS, OSX, Haiku, BeOS, and Android.
+> NOTE: Unix-based platforms means Linux, iOS, OSX, Haiku, BeOS, and Android.
