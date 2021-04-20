@@ -7,3 +7,4 @@
 - [ice_math.h Documentation](ice_math_api.md)
 - [ice_time.h Documentation](ice_time_api.md)
 - [ice_ram.h Documentation](ice_ram_api.md)
+- [ice_test.h Documentation](ice_test_api.md)
