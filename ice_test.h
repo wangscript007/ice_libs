@@ -96,18 +96,18 @@ THE SOFTWARE.
 #include <assert.h>
 
 #if defined(__cplusplus)
-#define ICE_TEST_DEFINE(name)\
+#define ICE_TEST_CREATE(name)\
     extern "C" void name(void)
 #else
-#define ICE_TEST_DEFINE(name)\
+#define ICE_TEST_CREATE(name)\
     void name(void)
 #endif
 
-#define ICE_ASSERT_EQU(a, b) {\
+#define ICE_TEST_ASSERT_EQU(a, b) {\
     assert((a == b) ? 1 : 0);\
 }
 
-#define ICE_ASSERT_STR_EQU(a, b) {\
+#define ICE_TEST_ASSERT_STR_EQU(a, b) {\
     int lenstr1 = 0;\
     int lenstr2 = 0;\
     int matches = 0;\
@@ -123,28 +123,28 @@ THE SOFTWARE.
     assert((matches == lenstr1) ? 1 : 0);\
 }
 
-#define ICE_ASSERT_TRUE(a) {\
+#define ICE_TEST_ASSERT_TRUE(a) {\
     assert(a);\
 }
 
-#define ICE_ASSERT_FALSE(a) {\
+#define ICE_TEST_ASSERT_FALSE(a) {\
     assert(!a);\
 }
 
-#define ICE_ASSERT_NULL(a) {\
+#define ICE_TEST_ASSERT_NULL(a) {\
     assert((a == NULL) ? 1 : 0);\
 }
 
-#define ICE_ASSERT_NOT_NULL(a) {\
+#define ICE_TEST_ASSERT_NOT_NULL(a) {\
     assert((a != NULL) ? 1 : 0);\
 }
 
-#define ICE_ASSERT_INT(a) {\
+#define ICE_TEST_ASSERT_INT(a) {\
     int x = (int) a;\
     assert((x == a) ? 1 : 0);\
 }
 
-#define ICE_ASSERT_NOT_INT(a) {\
+#define ICE_TEST_ASSERT_NOT_INT(a) {\
     int x = (int) a;\
     assert((x != a) ? 1 : 0);\
 }
