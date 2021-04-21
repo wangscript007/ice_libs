@@ -16,7 +16,7 @@ Plus some functions for algorithms and formulas were added!
 Also, It includes made-from-zero implementation of C math library functions! (ice_math doesn't need math.h)
 
 [2] USAGE:
-Define ICE_MATH_IMPL Then include ice_math.h in your C/C++ code!
+Define ICE_MATH_IMPL then include ice_math.h in your C/C++ code!
 
 [3] NOTE:
 Portions of this uses Ramon Santamaria's raymath (for Quaternions, Vectors, Matrices), Which has license.

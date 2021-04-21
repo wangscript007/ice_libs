@@ -18,7 +18,7 @@ Haiku/BeOS          -> load_add_on, unload_add_on, get_image_symbol
 Elsewhere           -> dlopen, dlsym, dlclose
 
 [3] USAGE:
-Define ICE_STEAM_IMPL Then include ice_steam.h in your C/C++ code!
+Define ICE_STEAM_IMPL then include ice_steam.h in your C/C++ code!
 
 */
 

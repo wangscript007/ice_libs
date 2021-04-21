@@ -12,7 +12,7 @@ ice_easings is cross-platform single-header C library for working with easings, 
 Robert Penner's easings!
 
 [2] USAGE:
-Define ICE_EASINGS_IMPL Then include ice_easings.h in your C/C++ code!
+Define ICE_EASINGS_IMPL then include ice_easings.h in your C/C++ code!
 
 [3] LICENSES:
 See licenses.txt for licenses of each lib!

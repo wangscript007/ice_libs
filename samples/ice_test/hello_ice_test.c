@@ -1,3 +1,4 @@
+#define ICE_TEST_IMPL
 #include <stdio.h>
 #include "ice_test.h"
 
@@ -9,7 +10,7 @@ ICE_TEST_CREATE(equ) {
     ICE_TEST_ASSERT_NOT_NULL(b);
     ICE_TEST_ASSERT_INT(a);
     ICE_TEST_ASSERT_INT(b);
-    ICE_TEST_ASSERT_EQU(a, b);
+    ICE_TEST_ASSERT_EQU(a + b, 11);
     
     printf("TEST equ RAN SUCCESSFULLY!\n");
 }

@@ -14,7 +14,7 @@ ice_time is cross-platform single-header C library for working with Time!
 It can be used to get current second, hour, month, year, day, week, And also time as string!
 
 [2] USAGE:
-Define ICE_TIME_IMPL Then include ice_time.h in your C/C++ code!
+Define ICE_TIME_IMPL then include ice_time.h in your C/C++ code!
 
 */
 

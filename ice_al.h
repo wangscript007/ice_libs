@@ -18,7 +18,7 @@ Haiku/BeOS          -> load_add_on, unload_add_on, get_image_symbol
 Elsewhere           -> dlopen, dlsym, dlclose
 
 [3] USAGE:
-Define ICE_AL_IMPL Then include ice_al.h in your C/C++ code!
+Define ICE_AL_IMPL then include ice_al.h in your C/C++ code!
 
 */
 

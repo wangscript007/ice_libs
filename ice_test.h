@@ -11,7 +11,7 @@
 ice_test is cross-platform single-header tiny C library for unit testing!
 
 [2] USAGE:
-Include ice_test.h in your C/C++ code!
+Define ICE_TEST_IMPL then include ice_test.h in your C/C++ code!
 */
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -93,6 +93,10 @@ THE SOFTWARE.
 #  define CINTERFACE
 #endif
 
+///////////////////////////////////////////////////////////////////////////////////////////
+// ice_test IMPLEMENTATION
+///////////////////////////////////////////////////////////////////////////////////////////
+#if defined(ICE_TEST_IMPL)
 #include <assert.h>
 
 #if defined(__cplusplus)
@@ -132,11 +136,11 @@ THE SOFTWARE.
 }
 
 #define ICE_TEST_ASSERT_NULL(a) {\
-    assert((a == NULL) ? 1 : 0);\
+    assert((&a == NULL) ? 1 : 0);\
 }
 
 #define ICE_TEST_ASSERT_NOT_NULL(a) {\
-    assert((a != NULL) ? 1 : 0);\
+    assert((&a != NULL) ? 1 : 0);\
 }
 
 #define ICE_TEST_ASSERT_INT(a) {\
@@ -149,4 +153,5 @@ THE SOFTWARE.
     assert((x != a) ? 1 : 0);\
 }
 
+#endif  // ICE_TEST_IMPL
 #endif  // ICE_TEST_H

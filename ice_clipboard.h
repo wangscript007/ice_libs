@@ -20,7 +20,7 @@ OSX                 -> NSPasteboard
 Elsewhere           -> Text file contains string
 
 [3] USAGE:
-Define ICE_CLIPBOARD_IMPL Then include ice_clipboard.h in your C/C++ code!
+Define ICE_CLIPBOARD_IMPL then include ice_clipboard.h in your C/C++ code!
 
 */
 
