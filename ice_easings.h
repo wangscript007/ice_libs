@@ -16,7 +16,6 @@ Define ICE_EASINGS_IMPL then include ice_easings.h in your C/C++ code!
 
 [3] LICENSES:
 See licenses.txt for licenses of each lib!
-
 */
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -159,8 +158,6 @@ THE SOFTWARE.
 #else
 #  define ICE_EASINGS_API ICE_EASINGS_EXTERNDEF static inline
 #endif
-
-//#pragma once
 
 #if defined(__cplusplus)
 extern "C" {

@@ -19,7 +19,6 @@ Elsewhere           -> dlopen, dlsym, dlclose
 
 [3] USAGE:
 Define ICE_STEAM_IMPL then include ice_steam.h in your C/C++ code!
-
 */
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -112,8 +111,6 @@ Define ICE_STEAM_IMPL then include ice_steam.h in your C/C++ code!
 #else
 #  define ICE_STEAM_API ICE_STEAM_EXTERNDEF static inline
 #endif
-
-//#pragma once
 
 #if defined(__cplusplus)
 extern "C" {

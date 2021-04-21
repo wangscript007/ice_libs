@@ -20,7 +20,6 @@ Elsewhere           -> dlopen, dlsym, dlclose
 
 [3] USAGE:
 Define ICE_FFI_IMPL then include ice_ffi.h in your C/C++ code!
-
 */
 
 ///////////////////////////////////////////////////////////////////////////////////////////

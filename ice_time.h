@@ -15,7 +15,6 @@ It can be used to get current second, hour, month, year, day, week, And also tim
 
 [2] USAGE:
 Define ICE_TIME_IMPL then include ice_time.h in your C/C++ code!
-
 */
 
 ///////////////////////////////////////////////////////////////////////////////////////////

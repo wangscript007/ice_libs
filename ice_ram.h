@@ -194,8 +194,6 @@ THE SOFTWARE.
 #  define ICE_RAM_API ICE_RAM_EXTERNDEF static inline
 #endif
 
-//#pragma once
-
 #if defined(__cplusplus)
 extern "C" {
 #endif

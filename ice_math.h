@@ -20,7 +20,6 @@ Define ICE_MATH_IMPL then include ice_math.h in your C/C++ code!
 
 [3] NOTE:
 Portions of this uses Ramon Santamaria's raymath (for Quaternions, Vectors, Matrices), Which has license.
-
 */
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -168,8 +167,6 @@ THE SOFTWARE.
 #else
 #  define ICE_MATH_API ICE_MATH_EXTERNDEF static inline
 #endif
-
-//#pragma once
 
 #if defined(__cplusplus)
 extern "C" {

@@ -19,7 +19,6 @@ Elsewhere           -> dlopen, dlsym, dlclose
 
 [3] USAGE:
 Define ICE_AL_IMPL then include ice_al.h in your C/C++ code!
-
 */
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -109,8 +108,6 @@ Define ICE_AL_IMPL then include ice_al.h in your C/C++ code!
 #else
 #  define ICE_AL_API ICE_AL_EXTERNDEF static inline
 #endif
-
-//#pragma once
 
 #if defined(__cplusplus)
 extern "C" {
