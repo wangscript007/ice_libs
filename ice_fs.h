@@ -95,6 +95,13 @@ THE SOFTWARE.
 #  define CINTERFACE
 #endif
 
+// Disable security warnings for MSVC compiler, We don't want to use C11!
+#ifdef _MSC_VER
+#  define _CRT_SECURE_NO_DEPRECATE
+#  define _CRT_SECURE_NO_WARNINGS
+#  pragma warning(disable:4996)
+#endif
+
 // Allow to use calling conventions if desired...
 #if defined(__GNUC__) || defined(__GNUG__)
 #  if defined(ICE_FS_CALLCONV_VECTORCALL)
@@ -1377,7 +1384,7 @@ ICE_FS_API char* ICE_FS_CALLCONV ice_fs_previous_dir(char* dir) {
             loccur = i;
             break;
         }
-        if (str[i] == '\\' || str[i] == '/') count++;
+        if (dir[i] == '\\' || dir[i] == '/') count++;
     }
     
     return ice_fs_strfrom(dir, 0, loccur);
@@ -1394,7 +1401,7 @@ ICE_FS_API char* ICE_FS_CALLCONV ice_fs_file_dir(char* dir) {
             loccur = i;
             break;
         }
-        if (str[i] == '\\' || str[i] == '/') count++;
+        if (dir[i] == '\\' || dir[i] == '/') count++;
     }
     
     return ice_fs_strfrom(dir, 0, loccur);
@@ -1558,21 +1565,21 @@ ICE_FS_API char** ICE_FS_CALLCONV ice_fs_split_dir(char* dir, char delim) {
     
     for (int i = 0; i < elems; i++) {
         if (i == 0) {
-            res[i] = (char*) calloc((to - from) + 1, sizeof(char));
+            res[i] = (char*) calloc((arr_elem_lengths[i] - 2) + 1, sizeof(char));
             int count = 0;
     
             for (int i = 0; i <= arr_elem_lengths[i] - 2; i++) {
-                res[i][count] = str[i];
+                res[i][count] = dir[i];
                 count++;
             }
     
             res[count + 1] = '\0';
         } else {
-            res[i] = (char*) calloc((to - from) + 1, sizeof(char));
+            res[i] = (char*) calloc(((arr_elem_lengths[i] - 2) - arr_elem_lengths[i - 1]) + 1, sizeof(char));
             int count = 0;
     
             for (int i = arr_elem_lengths[i - 1]; i <= arr_elem_lengths[i] - 2; i++) {
-                res[i][count] = str[i];
+                res[i][count] = dir[i];
                 count++;
             }
     
@@ -1592,7 +1599,7 @@ ICE_FS_API char** ICE_FS_CALLCONV ice_fs_dir_list(char* dir) {
     
     if ((d = opendir(dir)) != NULL) {
         while ((ent = readdir(d)) != NULL) {
-            res[count] = nt->d_name;
+            res[count] = ent->d_name;
             count++;
         }
         closedir(d);
@@ -1606,7 +1613,7 @@ ICE_FS_API ice_fs_bool ICE_FS_CALLCONV ice_fs_dir_exists(char* dir) {
     
     if (opendir(dir) != NULL) {
         return (closedir(d) < 0) ? ICE_FS_FALSE : ICE_FS_TRUE;
-    else {
+    } else {
         return ICE_FS_FALSE;
     }
 }
@@ -1699,11 +1706,11 @@ ICE_FS_API char* ICE_FS_CALLCONV ice_fs_full_file_path(char* fname) {
 }
 
 ICE_FS_API ice_fs_bool ICE_FS_CALLCONV ice_fs_is_file_ext(char* fname, char* ext) {
-    if (strcmp(ice_fs_file_ext(fname), ext) == 0) result = true;
+    return (strcmp(ice_fs_file_ext(fname), ext) == 0) ? ICE_FS_TRUE : ICE_FS_FALSE;
 }
 
 ICE_FS_API char* ICE_FS_CALLCONV ice_fs_file_ext(char* fname) {
-    const char *dot = strrchr(fileName, '.');
+    const char *dot = strrchr(fname, '.');
     if (!dot || dot == fname) return NULL;
     return (dot + 1);
 }
@@ -1719,7 +1726,7 @@ ICE_FS_API char* ICE_FS_CALLCONV ice_fs_file_name(char* dir) {
             loccur = i;
             break;
         }
-        if (str[i] == '\\' || str[i] == '/') count++;
+        if (dir[i] == '\\' || dir[i] == '/') count++;
     }
     
     return ice_fs_strfrom(dir, loccur, lenstr);
@@ -1740,16 +1747,16 @@ ICE_FS_API char* ICE_FS_CALLCONV ice_fs_dir_name(char* dir) {
             soccur = i;
             break;
         }
-        if (str[i] == '\\' || str[i] == '/') count++;
+        if (dir[i] == '\\' || dir[i] == '/') count++;
     }
     
     return ice_fs_strfrom(dir, foccur, soccur);
 }
 
 ICE_FS_API char* ICE_FS_CALLCONV ice_fs_name_no_ext(char* fname) {
-    size_t lenstr = strlen(dir);
-    int bscount = ice_fs_count_backslashes(dir);
-    int dotcount = ice_fs_count_dots(dir);
+    size_t lenstr = strlen(fname);
+    int bscount = ice_fs_count_backslashes(fname);
+    int dotcount = ice_fs_count_dots(fname);
     int scount = 0;
     int pcount = 0;
     int loccur = 0;
@@ -1764,11 +1771,11 @@ ICE_FS_API char* ICE_FS_CALLCONV ice_fs_name_no_ext(char* fname) {
         if (scount == bscount - 1) {
             loccur = i;
         }
-        if (str[i] == '\\' || str[i] == '/') scount++;
-        if (str[i] == '.') pcount++;
+        if (fname[i] == '\\' || fname[i] == '/') scount++;
+        if (fname[i] == '.') pcount++;
     }
     
-    return ice_fs_strfrom(dir, loccur, poccur);
+    return ice_fs_strfrom(fname, loccur, poccur);
 }
 
 ICE_FS_API char* ICE_FS_CALLCONV ice_fs_get_line(char* fname, int l) {
@@ -1784,7 +1791,7 @@ ICE_FS_API char* ICE_FS_CALLCONV ice_fs_get_line(char* fname, int l) {
 }
 
 ICE_FS_API ice_fs_bool ICE_FS_CALLCONV ice_fs_edit_line(char* fname, int l, char* content) {
-    ice_fs_remove_line(l);
+    ice_fs_remove_line(fname, l);
     FILE* data = fopen(fname, "a");
     for (int i = 0; i < l; i++) fprintf(data, "\0\n");
     fprintf(data, "%s", content);
@@ -1807,7 +1814,7 @@ ICE_FS_API ice_fs_bool ICE_FS_CALLCONV ice_fs_remove_line(char* fname, int l) {
     }
     fclose(data);
     fclose(temp_data);
-    storage_clear();
+    remove(fname);
     rename("temp", fname);
 }
 
@@ -1816,13 +1823,13 @@ ICE_FS_API char** ICE_FS_CALLCONV ice_fs_lines(char* fname) {
     size_t arrsize = 0;
     
     for (int i = 0; i < count; i++) {
-        arrsize += strlen(ice_fs_get_line(i));
+        arrsize += strlen(ice_fs_get_line(fname, i));
     }
     
     char** lines = (char**) malloc(arrsize * sizeof(char));
     
     for (int i = 0; i < count; i++) {
-        lines[i] = ice_fs_get_line(i);
+        lines[i] = ice_fs_get_line(fname, i);
     }
     
     return lines;

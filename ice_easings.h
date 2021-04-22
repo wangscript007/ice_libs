@@ -92,6 +92,18 @@ THE SOFTWARE.
 #ifndef ICE_EASINGS_H
 #define ICE_EASINGS_H
 
+// Define C interface for Windows libraries! ;)
+#ifndef CINTERFACE
+#  define CINTERFACE
+#endif
+
+// Disable security warnings for MSVC compiler, We don't want to use C11!
+#ifdef _MSC_VER
+#  define _CRT_SECURE_NO_DEPRECATE
+#  define _CRT_SECURE_NO_WARNINGS
+#  pragma warning(disable:4996)
+#endif
+
 // Allow to use calling conventions if desired...
 #if defined(__GNUC__) || defined(__GNUG__)
 #  if defined(ICE_EASINGS_CALLCONV_VECTORCALL)

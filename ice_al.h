@@ -42,6 +42,13 @@ Define ICE_AL_IMPL then include ice_al.h in your C/C++ code!
 #  define CINTERFACE
 #endif
 
+// Disable security warnings for MSVC compiler, We don't want to use C11!
+#ifdef _MSC_VER
+#  define _CRT_SECURE_NO_DEPRECATE
+#  define _CRT_SECURE_NO_WARNINGS
+#  pragma warning(disable:4996)
+#endif
+
 // Allow to use calling convention if desired...
 #if defined(__GNUC__) || defined(__GNUG__)
 #  if defined(ICE_AL_CALLCONV_VECTORCALL)
