@@ -64,7 +64,7 @@ double ice_easings_back_in(double t, double b, double c, double d);
 double ice_easings_back_out(double t, double b, double c, double d);
 double ice_easings_back_in_out(double t, double b, double c, double d);
 
-double  ice_easings_bounce_in(double t, double b, double c, double d);
-double  ice_easings_bounce_out(double t, double b, double c, double d);
-double  ice_easings_bounce_in_out(double t, double b, double c, double d);
+double ice_easings_bounce_in(double t, double b, double c, double d);
+double ice_easings_bounce_out(double t, double b, double c, double d);
+double ice_easings_bounce_in_out(double t, double b, double c, double d);
 ```

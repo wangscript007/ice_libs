@@ -4,14 +4,58 @@
 
 ```c
 typedef enum {
-    ICE_JOY_TRUE   = 0,
-    ICE_JOY_FALSE  = -1,
+    ICE_JOY_TRUE    = 0,
+    ICE_JOY_FALSE   = -1,
 } ice_joy_bool;
 
 typedef enum {
     ICE_JOY_MOVE_ANALOG,
     ICE_JOY_CAMERA_ANALOG,
 } ice_joy_analog;
+
+typedef enum {
+    ICE_JOY_NONE,
+    ICE_JOY_A,
+    ICE_JOY_B,
+    ICE_JOY_X,
+    ICE_JOY_Y,
+    ICE_JOY_CROSS,
+    ICE_JOY_CIRCLE,
+    ICE_JOY_SQUARE,
+    ICE_JOY_TRIANGLE,
+    ICE_JOY_LB,
+    ICE_JOY_RB,
+    ICE_JOY_LT,
+    ICE_JOY_RT,
+    ICE_JOY_L1,
+    ICE_JOY_R1,
+    ICE_JOY_L2,
+    ICE_JOY_R2,
+    ICE_JOY_L3,
+    ICE_JOY_R3,
+    ICE_JOY_OPTIONS,
+    ICE_JOY_START,
+    ICE_JOY_BACK,
+    ICE_JOY_VIEW,
+    ICE_JOY_MENU,
+    ICE_JOY_SELECT,
+    ICE_JOY_UP,
+    ICE_JOY_DOWN,
+    ICE_JOY_LEFT,
+    ICE_JOY_RIGHT,
+} ice_joy_button;
+
+typedef enum {
+    ICE_JOY_HAT_CENTERED,
+    ICE_JOY_HAT_UP,
+    ICE_JOY_HAT_UP_RIGHT,
+    ICE_JOY_HAT_RIGHT,
+    ICE_JOY_HAT_DOWN_RIGHT,
+    ICE_JOY_HAT_DOWN,
+    ICE_JOY_HAT_DOWN_LEFT,
+    ICE_JOY_HAT_LEFT,
+    ICE_JOY_HAT_UP_LEFT,
+} ice_joy_hat;
 ```
 
 ### Structs
@@ -105,5 +149,6 @@ ice_joy_bool ice_joy_button_released(int ice_joy_index, int button);            
 
 // Analogs and Hats (Hats might be removed if not compatible...)
 ice_joy_vec2 ice_joy_analog_movement(int ice_joy_index, ice_joy_analog analog);    // Returns 2D vector position containing movement of analog from Joystick at index ice_joy_index.
-float        ice_joy_hat_movement(int ice_joy_index, int hat);                     // Returns float which is movement of hat from Joystick at index ice_joy_index.
+ice_joy_bool ice_joy_hat_pressed(int ice_joy_index, int hat);                     // Returns float which is movement of hat from Joystick at index ice_joy_index.
 ```
+

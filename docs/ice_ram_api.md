@@ -35,9 +35,9 @@ typedef unsigned long long int ice_ram_bytes;
 #define ICE_RAM_DLLIMPORT
 ```
 
-### API
+### Functions
 
 ```c
-ICE_RAM_API  ice_ram_bytes  ICE_RAM_CALLCONV  ice_ram_total(void);           // Returns total memory (RAM) device has, In bytes.
-ICE_RAM_API  ice_ram_bytes  ICE_RAM_CALLCONV  ice_ram_free(void);            // Returns available/free memory (RAM) device has, In bytes.
+ice_ram_bytes ice_ram_total(void);  // Returns total memory (RAM) device has, In bytes.
+ice_ram_bytes ice_ram_free(void);   // Returns available/free memory (RAM) device has, In bytes.
 ```

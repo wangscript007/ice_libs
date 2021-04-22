@@ -1,6 +1,6 @@
 # ice_test.h Documentation
 
-### API
+### Functions
 
 ```c
 ICE_TEST_CREATE(name)                                   // Creates a unit test with name
