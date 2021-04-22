@@ -1,7 +1,7 @@
 // Written by Rabia Alhaffar in 11/April/2021
 // ice_clipboard.h
 // Single-Header Cross-Platform Clipboard library written in C!
-// Updated: 15/April/2021
+// Updated: 22/April/2021
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // ice_clipboard.h (FULL OVERVIEW)
@@ -97,16 +97,16 @@ THE SOFTWARE.
 #ifndef ICE_CLIPBOARD_H
 #define ICE_CLIPBOARD_H
 
-// Define C interface for Windows libraries! ;)
-#ifndef CINTERFACE
-#  define CINTERFACE
-#endif
-
-// Disable security warnings for MSVC compiler, We don't want to use C11!
+// Disable security warnings for MSVC compiler, We don't want to force using C11!
 #ifdef _MSC_VER
 #  define _CRT_SECURE_NO_DEPRECATE
 #  define _CRT_SECURE_NO_WARNINGS
 #  pragma warning(disable:4996)
+#endif
+
+// Define C interface for Windows libraries! ;)
+#ifndef CINTERFACE
+#  define CINTERFACE
 #endif
 
 // Allow to use calling convention if desired...
@@ -150,13 +150,6 @@ THE SOFTWARE.
 #  define ICE_CLIPBOARD_CALLCONV
 #endif
 
-// Allow to use them as extern functions if desired!
-#if defined(ICE_CLIPBOARD_EXTERN)
-#  define ICE_CLIPBOARD_EXTERNDEF extern
-#else
-#  define ICE_CLIPBOARD_EXTERNDEF
-#endif
-
 // Autodetect platform if not defined!
 // If no platform defined, This definition will define itself
 // This definition sets platform depending on platform-specified C compiler definitions
@@ -189,18 +182,32 @@ THE SOFTWARE.
 #  endif
 #endif
 
+// Allow to use them as extern functions if desired!
+#if defined(ICE_CLIPBOARD_EXTERN)
+#  define ICE_CLIPBOARD_EXTERNDEF extern
+#else
+#  define ICE_CLIPBOARD_EXTERNDEF
+#endif
+
+// If using ANSI C, Disable inline keyword usage so you can use library with ANSI C if possible!
+#if !defined(__STDC_VERSION__)
+#  define ICE_CLIPBOARD_INLINEDEF
+#elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+#  define ICE_CLIPBOARD_INLINEDEF inline
+#endif
+
 // Allow to build DLL via ICE_CLIPBOARD_DLLEXPORT or ICE_CLIPBOARD_DLLIMPORT if desired!
 // Else, Just define API as static inlined C code!
 #if defined(ICE_CLIPBOARD_MICROSOFT)
 #  if defined(ICE_CLIPBOARD_DLLEXPORT)
-#    define ICE_CLIPBOARD_API ICE_CLIPBOARD_EXTERNDEF __declspec(dllexport) inline
+#    define ICE_CLIPBOARD_API ICE_CLIPBOARD_EXTERNDEF __declspec(dllexport) ICE_CLIPBOARD_INLINEDEF
 #  elif defined(ICE_CLIPBOARD_DLLIMPORT)
-#    define ICE_CLIPBOARD_API ICE_CLIPBOARD_EXTERNDEF __declspec(dllimport) inline
+#    define ICE_CLIPBOARD_API ICE_CLIPBOARD_EXTERNDEF __declspec(dllimport) ICE_CLIPBOARD_INLINEDEF
 #  else
-#    define ICE_CLIPBOARD_API ICE_CLIPBOARD_EXTERNDEF static inline
+#    define ICE_CLIPBOARD_API ICE_CLIPBOARD_EXTERNDEF static ICE_CLIPBOARD_INLINEDEF
 #  endif
 #else
-#  define ICE_CLIPBOARD_API ICE_CLIPBOARD_EXTERNDEF static inline
+#  define ICE_CLIPBOARD_API ICE_CLIPBOARD_EXTERNDEF static ICE_CLIPBOARD_INLINEDEF
 #endif
 
 // Haiku, And BeOS can't work with C as their APIs written in C++, They should be used with C++! :(

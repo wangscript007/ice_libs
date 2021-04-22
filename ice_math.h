@@ -1,7 +1,7 @@
 // Written by Rabia Alhaffar in 4/April/2021
 // ice_math.h
 // Single-Header Cross-Platform C library for working with Math!
-// Updated: 15/April/2021
+// Updated: 22/April/2021
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // ice_math.h (FULL OVERVIEW)
@@ -96,16 +96,16 @@ THE SOFTWARE.
 #ifndef ICE_MATH_H
 #define ICE_MATH_H
 
-// Define C interface for Windows libraries! ;)
-#ifndef CINTERFACE
-#  define CINTERFACE
-#endif
-
-// Disable security warnings for MSVC compiler, We don't want to use C11!
+// Disable security warnings for MSVC compiler, We don't want to force using C11!
 #ifdef _MSC_VER
 #  define _CRT_SECURE_NO_DEPRECATE
 #  define _CRT_SECURE_NO_WARNINGS
 #  pragma warning(disable:4996)
+#endif
+
+// Define C interface for Windows libraries! ;)
+#ifndef CINTERFACE
+#  define CINTERFACE
 #endif
 
 // Allow to use calling convention if desired...
@@ -149,6 +149,11 @@ THE SOFTWARE.
 #  define ICE_MATH_CALLCONV
 #endif
 
+// Detect Windows to allow building DLLs
+#if defined(__WIN) || defined(_WIN32_) || defined(_WIN64_) || defined(WIN32) || defined(__WIN32__) || defined(WIN64) || defined(__WIN64__) || defined(WINDOWS) || defined(_WINDOWS) || defined(__WINDOWS) || defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__) || defined(_MSC_VER) || defined(__WINDOWS__) || defined(_X360) || defined(XBOX360) || defined(__X360) || defined(__X360__) || defined(_XBOXONE) || defined(XBONE) || defined(XBOX) || defined(__XBOX__) || defined(__XBOX) || defined(__xbox__) || defined(__xbox) || defined(_XBOX) || defined(xbox)
+#  define ICE_MATH_PLATFORM_MICROSOFT
+#endif
+
 // Allow to use them as extern functions if desired!
 #if defined(ICE_MATH_EXTERN)
 #  define ICE_MATH_EXTERNDEF extern
@@ -156,23 +161,25 @@ THE SOFTWARE.
 #  define ICE_MATH_EXTERNDEF
 #endif
 
-// Detect Windows to allow building DLLs
-#if defined(__WIN) || defined(_WIN32_) || defined(_WIN64_) || defined(WIN32) || defined(__WIN32__) || defined(WIN64) || defined(__WIN64__) || defined(WINDOWS) || defined(_WINDOWS) || defined(__WINDOWS) || defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__) || defined(_MSC_VER) || defined(__WINDOWS__) || defined(_X360) || defined(XBOX360) || defined(__X360) || defined(__X360__) || defined(_XBOXONE) || defined(XBONE) || defined(XBOX) || defined(__XBOX__) || defined(__XBOX) || defined(__xbox__) || defined(__xbox) || defined(_XBOX) || defined(xbox)
-#  define ICE_MATH_PLATFORM_MICROSOFT
+// If using ANSI C, Disable inline keyword usage so you can use library with ANSI C if possible!
+#if !defined(__STDC_VERSION__)
+#  define ICE_MATH_INLINEDEF
+#elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+#  define ICE_MATH_INLINEDEF inline
 #endif
 
 // Allow to build DLL via ICE_MATH_DLLEXPORT or ICE_MATH_DLLIMPORT if desired!
 // Else, Just define API as static inlined C code!
 #if defined(ICE_MATH_MICROSOFT)
 #  if defined(ICE_MATH_DLLEXPORT)
-#    define ICE_MATH_API ICE_MATH_EXTERNDEF __declspec(dllexport) inline
+#    define ICE_MATH_API ICE_MATH_EXTERNDEF __declspec(dllexport) ICE_MATH_INLINEDEF
 #  elif defined(ICE_MATH_DLLIMPORT)
-#    define ICE_MATH_API ICE_MATH_EXTERNDEF __declspec(dllimport) inline
+#    define ICE_MATH_API ICE_MATH_EXTERNDEF __declspec(dllimport) ICE_MATH_INLINEDEF
 #  else
-#    define ICE_MATH_API ICE_MATH_EXTERNDEF static inline
+#    define ICE_MATH_API ICE_MATH_EXTERNDEF static ICE_MATH_INLINEDEF
 #  endif
 #else
-#  define ICE_MATH_API ICE_MATH_EXTERNDEF static inline
+#  define ICE_MATH_API ICE_MATH_EXTERNDEF static ICE_MATH_INLINEDEF
 #endif
 
 #if defined(__cplusplus)
@@ -406,7 +413,7 @@ typedef struct ice_math_mtrand {
 } ice_math_mtrand;
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-// ice_math API
+// ice_math FUNCTIONS
 ///////////////////////////////////////////////////////////////////////////////////////////
 // Math Implementations (+ Extra Stuff)
 ICE_MATH_API  double  ICE_MATH_CALLCONV  ice_math_rad(double n);

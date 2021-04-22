@@ -1,7 +1,7 @@
 // Written by Rabia Alhaffar in 18/April/2021
 // ice_ram.h
 // Single-Header Cross-Platform C library to get free and total RAM!
-// Updated: 19/April/2021
+// Updated: 22/April/2021
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // ice_ram.h (FULL OVERVIEW)
@@ -104,16 +104,16 @@ THE SOFTWARE.
 #ifndef ICE_RAM_H
 #define ICE_RAM_H
 
-// Define C interface for Windows libraries! ;)
-#ifndef CINTERFACE
-#  define CINTERFACE
-#endif
-
-// Disable security warnings for MSVC compiler, We don't want to use C11!
+// Disable security warnings for MSVC compiler, We don't want to force using C11!
 #ifdef _MSC_VER
 #  define _CRT_SECURE_NO_DEPRECATE
 #  define _CRT_SECURE_NO_WARNINGS
 #  pragma warning(disable:4996)
+#endif
+
+// Define C interface for Windows libraries! ;)
+#ifndef CINTERFACE
+#  define CINTERFACE
 #endif
 
 // Allow to use calling conventions if desired...
@@ -157,13 +157,6 @@ THE SOFTWARE.
 #  define ICE_RAM_CALLCONV
 #endif
 
-// Allow to use them as extern functions if desired!
-#if defined(ICE_RAM_EXTERN)
-#  define ICE_RAM_EXTERNDEF extern
-#else
-#  define ICE_RAM_EXTERNDEF
-#endif
-
 #if !(defined(ICE_RAM_MICROSOFT) || defined(ICE_RAM_UNIX) || defined(ICE_RAM_APPLE) || defined(ICE_RAM_WEB) || defined(ICE_RAM_PSP))
 #  define ICE_RAM_PLATFORM_AUTODETECTED
 #endif
@@ -187,18 +180,32 @@ THE SOFTWARE.
 #  endif
 #endif
 
+// Allow to use them as extern functions if desired!
+#if defined(ICE_RAM_EXTERN)
+#  define ICE_RAM_EXTERNDEF extern
+#else
+#  define ICE_RAM_EXTERNDEF
+#endif
+
+// If using ANSI C, Disable inline keyword usage so you can use library with ANSI C if possible!
+#if !defined(__STDC_VERSION__)
+#  define ICE_RAM_INLINEDEF
+#elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+#  define ICE_RAM_INLINEDEF inline
+#endif
+
 // Allow to build DLL via ICE_RAM_DLLEXPORT or ICE_RAM_DLLIMPORT if desired!
 // Else, Just define API as static inlined C code!
 #if defined(ICE_RAM_MICROSOFT)
 #  if defined(ICE_RAM_DLLEXPORT)
-#    define ICE_RAM_API ICE_RAM_EXTERNDEF __declspec(dllexport) inline
+#    define ICE_RAM_API ICE_RAM_EXTERNDEF __declspec(dllexport) ICE_RAM_INLINEDEF
 #  elif defined(ICE_RAM_DLLIMPORT)
-#    define ICE_RAM_API ICE_RAM_EXTERNDEF __declspec(dllimport) inline
+#    define ICE_RAM_API ICE_RAM_EXTERNDEF __declspec(dllimport) ICE_RAM_INLINEDEF
 #  else
-#    define ICE_RAM_API ICE_RAM_EXTERNDEF static inline
+#    define ICE_RAM_API ICE_RAM_EXTERNDEF static ICE_RAM_INLINEDEF
 #  endif
 #else
-#  define ICE_RAM_API ICE_RAM_EXTERNDEF static inline
+#  define ICE_RAM_API ICE_RAM_EXTERNDEF static ICE_RAM_INLINEDEF
 #endif
 
 #if defined(__cplusplus)
@@ -208,13 +215,11 @@ extern "C" {
 ///////////////////////////////////////////////////////////////////////////////////////////
 // ice_ram DEFINITIONS
 ///////////////////////////////////////////////////////////////////////////////////////////
-
 typedef unsigned long long int ice_ram_bytes;
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-// ice_ram API
+// ice_ram FUNCTIONS
 ///////////////////////////////////////////////////////////////////////////////////////////
-
 ICE_RAM_API  ice_ram_bytes  ICE_RAM_CALLCONV  ice_ram_total(void);           // Returns total memory (RAM) device has, In bytes.
 ICE_RAM_API  ice_ram_bytes  ICE_RAM_CALLCONV  ice_ram_free(void);            // Returns available/free memory (RAM) device has, In bytes.
 

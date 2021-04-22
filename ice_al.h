@@ -1,7 +1,7 @@
 // Written by Rabia Alhaffar in 14/April/2021
 // ice_al.h
 // Single-Header Cross-Platform C OpenAL loader!
-// Updated: 14/April/2021
+// Updated: 22/April/2021
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // ice_al.h (FULL OVERVIEW)
@@ -37,16 +37,16 @@ Define ICE_AL_IMPL then include ice_al.h in your C/C++ code!
 #ifndef ICE_AL_H
 #define ICE_AL_H
 
-// Define C interface for Windows libraries! ;)
-#ifndef CINTERFACE
-#  define CINTERFACE
-#endif
-
-// Disable security warnings for MSVC compiler, We don't want to use C11!
+// Disable security warnings for MSVC compiler, We don't want to force using C11!
 #ifdef _MSC_VER
 #  define _CRT_SECURE_NO_DEPRECATE
 #  define _CRT_SECURE_NO_WARNINGS
 #  pragma warning(disable:4996)
+#endif
+
+// Define C interface for Windows libraries! ;)
+#ifndef CINTERFACE
+#  define CINTERFACE
 #endif
 
 // Allow to use calling convention if desired...
@@ -90,6 +90,11 @@ Define ICE_AL_IMPL then include ice_al.h in your C/C++ code!
 #  define ICE_AL_CALLCONV
 #endif
 
+// Detect Windows to allow building DLLs
+#if defined(__WIN) || defined(_WIN32_) || defined(_WIN64_) || defined(WIN32) || defined(__WIN32__) || defined(WIN64) || defined(__WIN64__) || defined(WINDOWS) || defined(_WINDOWS) || defined(__WINDOWS) || defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__) || defined(_MSC_VER) || defined(__WINDOWS__) || defined(_X360) || defined(XBOX360) || defined(__X360) || defined(__X360__) || defined(_XBOXONE) || defined(XBONE) || defined(XBOX) || defined(__XBOX__) || defined(__XBOX) || defined(__xbox__) || defined(__xbox) || defined(_XBOX) || defined(xbox)
+#  define ICE_AL_PLATFORM_MICROSOFT
+#endif
+
 // Allow to use them as extern functions if desired!
 #if defined(ICE_AL_EXTERN)
 #  define ICE_AL_EXTERNDEF extern
@@ -97,23 +102,25 @@ Define ICE_AL_IMPL then include ice_al.h in your C/C++ code!
 #  define ICE_AL_EXTERNDEF
 #endif
 
-// Detect Windows to allow building DLLs
-#if defined(__WIN) || defined(_WIN32_) || defined(_WIN64_) || defined(WIN32) || defined(__WIN32__) || defined(WIN64) || defined(__WIN64__) || defined(WINDOWS) || defined(_WINDOWS) || defined(__WINDOWS) || defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__) || defined(_MSC_VER) || defined(__WINDOWS__) || defined(_X360) || defined(XBOX360) || defined(__X360) || defined(__X360__) || defined(_XBOXONE) || defined(XBONE) || defined(XBOX) || defined(__XBOX__) || defined(__XBOX) || defined(__xbox__) || defined(__xbox) || defined(_XBOX) || defined(xbox)
-#  define ICE_AL_PLATFORM_MICROSOFT
+// If using ANSI C, Disable inline keyword usage so you can use library with ANSI C if possible!
+#if !defined(__STDC_VERSION__)
+#  define ICE_AL_INLINEDEF
+#elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+#  define ICE_AL_INLINEDEF inline
 #endif
 
 // Allow to build DLL via ICE_AL_DLLEXPORT or ICE_AL_DLLIMPORT if desired!
 // Else, Just define API as static inlined C code!
 #if defined(ICE_AL_PLATFORM_MICROSOFT)
 #  if defined(ICE_AL_DLLEXPORT)
-#    define ICE_AL_API ICE_AL_EXTERNDEF __declspec(dllexport) inline
+#    define ICE_AL_API ICE_AL_EXTERNDEF __declspec(dllexport) ICE_AL_INLINEDEF
 #  elif defined(ICE_AL_DLLIMPORT)
-#    define ICE_AL_API ICE_AL_EXTERNDEF __declspec(dllimport) inline
+#    define ICE_AL_API ICE_AL_EXTERNDEF __declspec(dllimport) ICE_AL_INLINEDEF
 #  else
-#    define ICE_AL_API ICE_AL_EXTERNDEF static inline
+#    define ICE_AL_API ICE_AL_EXTERNDEF static ICE_AL_INLINEDEF
 #  endif
 #else
-#  define ICE_AL_API ICE_AL_EXTERNDEF static inline
+#  define ICE_AL_API ICE_AL_EXTERNDEF static ICE_AL_INLINEDEF
 #endif
 
 #if defined(__cplusplus)
@@ -269,7 +276,7 @@ typedef void ALCvoid;
 #define ALC_ALL_DEVICES_SPECIFIER                0x1013
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-// ice_al API
+// ice_al FUNCTIONS
 ///////////////////////////////////////////////////////////////////////////////////////////
 typedef void (*PFNALDOPPLERFACTORPROC) (ALfloat value);
 typedef void (*PFNALSPEEDOFSOUNDPROC) (ALfloat value);

@@ -92,16 +92,16 @@ THE SOFTWARE.
 #ifndef ICE_EASINGS_H
 #define ICE_EASINGS_H
 
-// Define C interface for Windows libraries! ;)
-#ifndef CINTERFACE
-#  define CINTERFACE
-#endif
-
-// Disable security warnings for MSVC compiler, We don't want to use C11!
+// Disable security warnings for MSVC compiler, We don't want to force using C11!
 #ifdef _MSC_VER
 #  define _CRT_SECURE_NO_DEPRECATE
 #  define _CRT_SECURE_NO_WARNINGS
 #  pragma warning(disable:4996)
+#endif
+
+// Define C interface for Windows libraries! ;)
+#ifndef CINTERFACE
+#  define CINTERFACE
 #endif
 
 // Allow to use calling conventions if desired...
@@ -145,6 +145,11 @@ THE SOFTWARE.
 #  define ICE_EASINGS_CALLCONV
 #endif
 
+// Detect Windows to allow building DLLs
+#if defined(__WIN) || defined(_WIN32_) || defined(_WIN64_) || defined(WIN32) || defined(__WIN32__) || defined(WIN64) || defined(__WIN64__) || defined(WINDOWS) || defined(_WINDOWS) || defined(__WINDOWS) || defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__) || defined(_MSC_VER) || defined(__WINDOWS__) || defined(_X360) || defined(XBOX360) || defined(__X360) || defined(__X360__) || defined(_XBOXONE) || defined(XBONE) || defined(XBOX) || defined(__XBOX__) || defined(__XBOX) || defined(__xbox__) || defined(__xbox) || defined(_XBOX) || defined(xbox)
+#  define ICE_EASINGS_PLATFORM_MICROSOFT
+#endif
+
 // Allow to use them as extern functions if desired!
 #if defined(ICE_EASINGS_EXTERN)
 #  define ICE_EASINGS_EXTERNDEF extern
@@ -152,23 +157,25 @@ THE SOFTWARE.
 #  define ICE_EASINGS_EXTERNDEF
 #endif
 
-// Detect Windows to allow building DLLs
-#if defined(__WIN) || defined(_WIN32_) || defined(_WIN64_) || defined(WIN32) || defined(__WIN32__) || defined(WIN64) || defined(__WIN64__) || defined(WINDOWS) || defined(_WINDOWS) || defined(__WINDOWS) || defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__) || defined(_MSC_VER) || defined(__WINDOWS__) || defined(_X360) || defined(XBOX360) || defined(__X360) || defined(__X360__) || defined(_XBOXONE) || defined(XBONE) || defined(XBOX) || defined(__XBOX__) || defined(__XBOX) || defined(__xbox__) || defined(__xbox) || defined(_XBOX) || defined(xbox)
-#  define ICE_EASINGS_PLATFORM_MICROSOFT
+// If using ANSI C, Disable inline keyword usage so you can use library with ANSI C if possible!
+#if !defined(__STDC_VERSION__)
+#  define ICE_EASINGS_INLINEDEF
+#elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+#  define ICE_EASINGS_INLINEDEF inline
 #endif
 
 // Allow to build DLL via ICE_EASINGS_DLLEXPORT or ICE_EASINGS_DLLIMPORT if desired!
 // Else, Just define API as static inlined C code!
 #if defined(ICE_EASINGS_PLATFORM_MICROSOFT)
 #  if defined(ICE_EASINGS_DLLEXPORT)
-#    define ICE_EASINGS_API ICE_EASINGS_EXTERNDEF __declspec(dllexport) inline
+#    define ICE_EASINGS_API ICE_EASINGS_EXTERNDEF __declspec(dllexport) ICE_EASINGS_INLINEDEF
 #  elif defined(ICE_EASINGS_DLLIMPORT)
-#    define ICE_EASINGS_API ICE_EASINGS_EXTERNDEF __declspec(dllimport) inline
+#    define ICE_EASINGS_API ICE_EASINGS_EXTERNDEF __declspec(dllimport) ICE_EASINGS_INLINEDEF
 #  else
-#    define ICE_EASINGS_API ICE_EASINGS_EXTERNDEF static inline
+#    define ICE_EASINGS_API ICE_EASINGS_EXTERNDEF static ICE_EASINGS_INLINEDEF
 #  endif
 #else
-#  define ICE_EASINGS_API ICE_EASINGS_EXTERNDEF static inline
+#  define ICE_EASINGS_API ICE_EASINGS_EXTERNDEF static ICE_EASINGS_INLINEDEF
 #endif
 
 #if defined(__cplusplus)
@@ -176,9 +183,13 @@ extern "C" {
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-// ice_easings API
+// ice_easings DEFINITIONS
 ///////////////////////////////////////////////////////////////////////////////////////////
+#define ICE_EASINGS_PI 3.14159265358979323846
 
+///////////////////////////////////////////////////////////////////////////////////////////
+// ice_easings FUNCTIONS
+///////////////////////////////////////////////////////////////////////////////////////////
 ICE_EASINGS_API  double  ICE_EASINGS_CALLCONV  ice_easings_linear_none(double t, double b, double c, double d);
 ICE_EASINGS_API  double  ICE_EASINGS_CALLCONV  ice_easings_linear_in(double t, double b, double c, double d);
 ICE_EASINGS_API  double  ICE_EASINGS_CALLCONV  ice_easings_linear_out(double t, double b, double c, double d);
@@ -234,10 +245,6 @@ ICE_EASINGS_API  double  ICE_EASINGS_CALLCONV  ice_easings_bounce_in_out(double 
 #if defined(ICE_EASINGS_IMPL)
 #include <math.h>
 
-#if !defined(PI)
-#  define PI 3.14159265358979323846
-#endif
-
 ICE_EASINGS_API double ICE_EASINGS_CALLCONV ice_easings_linear_none(double t, double b, double c, double d) {
     return c * t / d + b;
 }
@@ -255,15 +262,15 @@ ICE_EASINGS_API double ICE_EASINGS_CALLCONV ice_easings_linear_in_out(double t, 
 }
 
 ICE_EASINGS_API double ICE_EASINGS_CALLCONV ice_easings_sine_in(double t, double b, double c, double d) {
-    return -c * cos(t / d * (PI / 2)) + c + b;
+    return -c * cos(t / d * (ICE_EASINGS_PI / 2)) + c + b;
 }
 
 ICE_EASINGS_API double ICE_EASINGS_CALLCONV ice_easings_sine_out(double t, double b, double c, double d) {
-    return c * sin(t / d * (PI / 2)) + b;
+    return c * sin(t / d * (ICE_EASINGS_PI / 2)) + b;
 }
 
 ICE_EASINGS_API double ICE_EASINGS_CALLCONV ice_easings_sine_in_out(double t, double b, double c, double d) {
-    return -c / 2 * (cos(PI * t / d) - 1) + b;
+    return -c / 2 * (cos(ICE_EASINGS_PI * t / d) - 1) + b;
 }
 
 ICE_EASINGS_API double ICE_EASINGS_CALLCONV ice_easings_cubic_in(double t, double b, double c, double d) {
@@ -314,7 +321,7 @@ ICE_EASINGS_API double ICE_EASINGS_CALLCONV ice_easings_elastic_in(double t, dou
     double s = p / 4;
     double postFix = a * pow(2, 10 * (t -= 1));
     
-    return -(postFix * sin((t * d - s) * (2 * PI) / p)) + b;
+    return -(postFix * sin((t * d - s) * (2 * ICE_EASINGS_PI) / p)) + b;
 }
 
 ICE_EASINGS_API double ICE_EASINGS_CALLCONV ice_easings_elastic_out(double t, double b, double c, double d) {
@@ -327,11 +334,11 @@ ICE_EASINGS_API double ICE_EASINGS_CALLCONV ice_easings_elastic_out(double t, do
     
     if (t < 1) {
         double postFix = a * pow(2, 10 * (t -= 1));
-        return -0.5 * (postFix * sin((t * d - s) * (2 * PI) / p)) + b;
+        return -0.5 * (postFix * sin((t * d - s) * (2 * ICE_EASINGS_PI) / p)) + b;
 	}
     
 	double postFix = a * pow(2, -10 * (t -= 1));
-	return postFix * sin((t * d - s) * (2 * PI) / p) * 0.5 + c + b;
+	return postFix * sin((t * d - s) * (2 * ICE_EASINGS_PI) / p) * 0.5 + c + b;
 }
 
 ICE_EASINGS_API double ICE_EASINGS_CALLCONV ice_easings_elastic_in_out(double t, double b, double c, double d) {
@@ -344,11 +351,11 @@ ICE_EASINGS_API double ICE_EASINGS_CALLCONV ice_easings_elastic_in_out(double t,
     
     if (t < 1) {
         double postFix = a * pow(2, 10 * (t -= 1));
-        return -0.5 * (postFix * sin((t * d - s) * (2 * PI) / p)) + b;
+        return -0.5 * (postFix * sin((t * d - s) * (2 * ICE_EASINGS_PI) / p)) + b;
 	}
     
 	double postFix = a * pow(2, -10 * (t -= 1));
-	return postFix * sin((t * d - s) * (2 * PI) / p) * 0.5 + c + b;
+	return postFix * sin((t * d - s) * (2 * ICE_EASINGS_PI) / p) * 0.5 + c + b;
 }
 
 ICE_EASINGS_API double ICE_EASINGS_CALLCONV ice_easings_quad_in(double t, double b, double c, double d) {

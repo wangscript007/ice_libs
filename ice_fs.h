@@ -90,16 +90,16 @@ THE SOFTWARE.
 #ifndef ICE_FS_H
 #define ICE_FS_H
 
-// Define C interface for Windows libraries! ;)
-#ifndef CINTERFACE
-#  define CINTERFACE
-#endif
-
-// Disable security warnings for MSVC compiler, We don't want to use C11!
+// Disable security warnings for MSVC compiler, We don't want to force using C11!
 #ifdef _MSC_VER
 #  define _CRT_SECURE_NO_DEPRECATE
 #  define _CRT_SECURE_NO_WARNINGS
 #  pragma warning(disable:4996)
+#endif
+
+// Define C interface for Windows libraries! ;)
+#ifndef CINTERFACE
+#  define CINTERFACE
 #endif
 
 // Allow to use calling conventions if desired...
@@ -143,13 +143,6 @@ THE SOFTWARE.
 #  define ICE_FS_CALLCONV
 #endif
 
-// Allow to use them as extern functions if desired!
-#if defined(ICE_FS_EXTERN)
-#  define ICE_FS_EXTERNDEF extern
-#else
-#  define ICE_FS_EXTERNDEF
-#endif
-
 // If no platform defined, This definition will define itself!
 #if !(defined(ICE_FS_PLATFORM_MICROSOFT) || defined(ICE_FS_PLATFORM_UNIX))
 #  define ICE_FS_PLATFORM_AUTODETECTED
@@ -164,18 +157,32 @@ THE SOFTWARE.
 #  endif
 #endif
 
+// Allow to use them as extern functions if desired!
+#if defined(ICE_FS_EXTERN)
+#  define ICE_FS_EXTERNDEF extern
+#else
+#  define ICE_FS_EXTERNDEF
+#endif
+
+// If using ANSI C, Disable inline keyword usage so you can use library with ANSI C if possible!
+#if !defined(__STDC_VERSION__)
+#  define ICE_FS_INLINEDEF
+#elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+#  define ICE_FS_INLINEDEF inline
+#endif
+
 // Allow to build DLL via ICE_FS_DLLEXPORT or ICE_FS_DLLIMPORT if desired!
 // Else, Just define API as static inlined C code!
 #if defined(ICE_FS_PLATFORM_MICROSOFT)
 #  if defined(ICE_FS_DLLEXPORT)
-#    define ICE_FS_API ICE_FS_EXTERNDEF __declspec(dllexport) inline
+#    define ICE_FS_API ICE_FS_EXTERNDEF __declspec(dllexport) ICE_FS_INLINEDEF
 #  elif defined(ICE_FS_DLLIMPORT)
-#    define ICE_FS_API ICE_FS_EXTERNDEF __declspec(dllimport) inline
+#    define ICE_FS_API ICE_FS_EXTERNDEF __declspec(dllimport) ICE_FS_INLINEDEF
 #  else
-#    define ICE_FS_API ICE_FS_EXTERNDEF static inline
+#    define ICE_FS_API ICE_FS_EXTERNDEF static ICE_FS_INLINEDEF
 #  endif
 #else
-#  define ICE_FS_API ICE_FS_EXTERNDEF static inline
+#  define ICE_FS_API ICE_FS_EXTERNDEF static ICE_FS_INLINEDEF
 #endif
 
 #if defined(__cplusplus)
@@ -191,45 +198,45 @@ typedef enum {
 } ice_fs_bool;
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-// ice_fs API
+// ice_fs FUNCTIONS
 ///////////////////////////////////////////////////////////////////////////////////////////
-ICE_FS_API  char*           ICE_FS_CALLCONV  ice_fs_home(void);
-ICE_FS_API  char*           ICE_FS_CALLCONV  ice_fs_root(char* f);
-ICE_FS_API  char*           ICE_FS_CALLCONV  ice_fs_current_dir(void);
-ICE_FS_API  char*           ICE_FS_CALLCONV  ice_fs_previous_dir(char* dir);
-ICE_FS_API  char*           ICE_FS_CALLCONV  ice_fs_file_dir(char* dir);
-ICE_FS_API  ice_fs_bool     ICE_FS_CALLCONV  ice_fs_change_dir(char* dir);
-ICE_FS_API  ice_fs_bool     ICE_FS_CALLCONV  ice_fs_remove_dir(char* dir);
-ICE_FS_API  ice_fs_bool     ICE_FS_CALLCONV  ice_fs_copy_dir(char* d1, char* d2);
-ICE_FS_API  ice_fs_bool     ICE_FS_CALLCONV  ice_fs_remove_file(char* dir);
-ICE_FS_API  ice_fs_bool     ICE_FS_CALLCONV  ice_fs_rename_file(char* d1, char* d2);
-ICE_FS_API  ice_fs_bool     ICE_FS_CALLCONV  ice_fs_rename_dir(char* d1, char* d2);
-ICE_FS_API  ice_fs_bool     ICE_FS_CALLCONV  ice_fs_copy_file(char* d1, char* d2);
-ICE_FS_API  char*           ICE_FS_CALLCONV  ice_fs_dir(char* dir);
-ICE_FS_API  char*           ICE_FS_CALLCONV  ice_fs_join_dir(char* d1, char* d2);
-ICE_FS_API  char*           ICE_FS_CALLCONV  ice_fs_join_dirs(char** dirs);
-ICE_FS_API  char**          ICE_FS_CALLCONV  ice_fs_split_dir(char* dir, char delim);
-ICE_FS_API  char**          ICE_FS_CALLCONV  ice_fs_dir_list(char* dir);
-ICE_FS_API  ice_fs_bool     ICE_FS_CALLCONV  ice_fs_dir_exists(char* dir);
-ICE_FS_API  ice_fs_bool     ICE_FS_CALLCONV  ice_fs_create_dir(char* dir);
-ICE_FS_API  ice_fs_bool     ICE_FS_CALLCONV  ice_fs_is_file(char* dir);
-ICE_FS_API  ice_fs_bool     ICE_FS_CALLCONV  ice_fs_is_dir(char* dir);
-ICE_FS_API  ice_fs_bool     ICE_FS_CALLCONV  ice_fs_create_file(char* name);
-ICE_FS_API  ice_fs_bool     ICE_FS_CALLCONV  ice_fs_write(char* name, char* content);
-ICE_FS_API  ice_fs_bool     ICE_FS_CALLCONV  ice_fs_clear(char* name);
-ICE_FS_API  ice_fs_bool     ICE_FS_CALLCONV  ice_fs_file_exists(char* fname);
-ICE_FS_API  char*           ICE_FS_CALLCONV  ice_fs_full_file_path(char* fname);
-ICE_FS_API  ice_fs_bool     ICE_FS_CALLCONV  ice_fs_is_file_ext(char* fname, char* ext);
-ICE_FS_API  char*           ICE_FS_CALLCONV  ice_fs_file_ext(char* fname);
-ICE_FS_API  char*           ICE_FS_CALLCONV  ice_fs_file_name(char* dir);
-ICE_FS_API  char*           ICE_FS_CALLCONV  ice_fs_dir_name(char* dir);
-ICE_FS_API  char*           ICE_FS_CALLCONV  ice_fs_name_no_ext(char* fname);
-ICE_FS_API  char*           ICE_FS_CALLCONV  ice_fs_get_line(char* fname, int l);
-ICE_FS_API  ice_fs_bool     ICE_FS_CALLCONV  ice_fs_edit_line(char* fname, int l, char* content);
-ICE_FS_API  ice_fs_bool     ICE_FS_CALLCONV  ice_fs_remove_line(char* fname, int l);
-ICE_FS_API  char**          ICE_FS_CALLCONV  ice_fs_lines(char* fname);
-ICE_FS_API  int             ICE_FS_CALLCONV  ice_fs_lines_count(char* fname);
-ICE_FS_API  char*           ICE_FS_CALLCONV  ice_fs_file_content(char* fname);
+ICE_FS_API  char*        ICE_FS_CALLCONV  ice_fs_home(void);
+ICE_FS_API  char*        ICE_FS_CALLCONV  ice_fs_root(char* f);
+ICE_FS_API  char*        ICE_FS_CALLCONV  ice_fs_current_dir(void);
+ICE_FS_API  char*        ICE_FS_CALLCONV  ice_fs_previous_dir(char* dir);
+ICE_FS_API  char*        ICE_FS_CALLCONV  ice_fs_file_dir(char* dir);
+ICE_FS_API  ice_fs_bool  ICE_FS_CALLCONV  ice_fs_change_dir(char* dir);
+ICE_FS_API  ice_fs_bool  ICE_FS_CALLCONV  ice_fs_remove_dir(char* dir);
+ICE_FS_API  ice_fs_bool  ICE_FS_CALLCONV  ice_fs_copy_dir(char* d1, char* d2);
+ICE_FS_API  ice_fs_bool  ICE_FS_CALLCONV  ice_fs_remove_file(char* dir);
+ICE_FS_API  ice_fs_bool  ICE_FS_CALLCONV  ice_fs_rename_file(char* d1, char* d2);
+ICE_FS_API  ice_fs_bool  ICE_FS_CALLCONV  ice_fs_rename_dir(char* d1, char* d2);
+ICE_FS_API  ice_fs_bool  ICE_FS_CALLCONV  ice_fs_copy_file(char* d1, char* d2);
+ICE_FS_API  char*        ICE_FS_CALLCONV  ice_fs_dir(char* dir);
+ICE_FS_API  char*        ICE_FS_CALLCONV  ice_fs_join_dir(char* d1, char* d2);
+ICE_FS_API  char*        ICE_FS_CALLCONV  ice_fs_join_dirs(char** dirs);
+ICE_FS_API  char**       ICE_FS_CALLCONV  ice_fs_split_dir(char* dir, char delim);
+ICE_FS_API  char**       ICE_FS_CALLCONV  ice_fs_dir_list(char* dir);
+ICE_FS_API  ice_fs_bool  ICE_FS_CALLCONV  ice_fs_dir_exists(char* dir);
+ICE_FS_API  ice_fs_bool  ICE_FS_CALLCONV  ice_fs_create_dir(char* dir);
+ICE_FS_API  ice_fs_bool  ICE_FS_CALLCONV  ice_fs_is_file(char* dir);
+ICE_FS_API  ice_fs_bool  ICE_FS_CALLCONV  ice_fs_is_dir(char* dir);
+ICE_FS_API  ice_fs_bool  ICE_FS_CALLCONV  ice_fs_create_file(char* name);
+ICE_FS_API  ice_fs_bool  ICE_FS_CALLCONV  ice_fs_write(char* name, char* content);
+ICE_FS_API  ice_fs_bool  ICE_FS_CALLCONV  ice_fs_clear(char* name);
+ICE_FS_API  ice_fs_bool  ICE_FS_CALLCONV  ice_fs_file_exists(char* fname);
+ICE_FS_API  char*        ICE_FS_CALLCONV  ice_fs_full_file_path(char* fname);
+ICE_FS_API  ice_fs_bool  ICE_FS_CALLCONV  ice_fs_is_file_ext(char* fname, char* ext);
+ICE_FS_API  char*        ICE_FS_CALLCONV  ice_fs_file_ext(char* fname);
+ICE_FS_API  char*        ICE_FS_CALLCONV  ice_fs_file_name(char* dir);
+ICE_FS_API  char*        ICE_FS_CALLCONV  ice_fs_dir_name(char* dir);
+ICE_FS_API  char*        ICE_FS_CALLCONV  ice_fs_name_no_ext(char* fname);
+ICE_FS_API  char*        ICE_FS_CALLCONV  ice_fs_get_line(char* fname, int l);
+ICE_FS_API  ice_fs_bool  ICE_FS_CALLCONV  ice_fs_edit_line(char* fname, int l, char* content);
+ICE_FS_API  ice_fs_bool  ICE_FS_CALLCONV  ice_fs_remove_line(char* fname, int l);
+ICE_FS_API  char**       ICE_FS_CALLCONV  ice_fs_lines(char* fname);
+ICE_FS_API  int          ICE_FS_CALLCONV  ice_fs_lines_count(char* fname);
+ICE_FS_API  char*        ICE_FS_CALLCONV  ice_fs_file_content(char* fname);
 
 #if defined(__cplusplus)
 }

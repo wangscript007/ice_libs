@@ -1,7 +1,7 @@
 // Written by Rabia Alhaffar in 26/March/2021
 // ice_ffi.h
 // Single-Header Cross-Platform C library for working with shared libs!
-// Updated: 1/April/2021
+// Updated: 22/April/2021
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // ice_ffi.h (FULL OVERVIEW)
@@ -96,16 +96,16 @@ THE SOFTWARE.
 #ifndef ICE_FFI_H
 #define ICE_FFI_H
 
-// Define C interface for Windows libraries! ;)
-#ifndef CINTERFACE
-#  define CINTERFACE
-#endif
-
-// Disable security warnings for MSVC compiler, We don't want to use C11!
+// Disable security warnings for MSVC compiler, We don't want to force using C11!
 #ifdef _MSC_VER
 #  define _CRT_SECURE_NO_DEPRECATE
 #  define _CRT_SECURE_NO_WARNINGS
 #  pragma warning(disable:4996)
+#endif
+
+// Define C interface for Windows libraries! ;)
+#ifndef CINTERFACE
+#  define CINTERFACE
 #endif
 
 // Allow to use calling conventions if desired...
@@ -149,13 +149,6 @@ THE SOFTWARE.
 #  define ICE_FFI_CALLCONV
 #endif
 
-// Allow to use them as extern functions if desired!
-#if defined(ICE_FFI_EXTERN)
-#  define ICE_FFI_EXTERNDEF extern
-#else
-#  define ICE_FFI_EXTERNDEF
-#endif
-
 // If no platform defined, This definition will define itself!
 #if !(defined(ICE_FFI_PLATFORM_MICROSOFT) || defined(ICE_FFI_PLATFORM_UNIX) || defined(ICE_FFI_PLATFORM_BEOS))
 #  define ICE_FFI_PLATFORM_AUTODETECTED
@@ -172,18 +165,32 @@ THE SOFTWARE.
 #  endif
 #endif
 
+// Allow to use them as extern functions if desired!
+#if defined(ICE_FFI_EXTERN)
+#  define ICE_FFI_EXTERNDEF extern
+#else
+#  define ICE_FFI_EXTERNDEF
+#endif
+
+// If using ANSI C, Disable inline keyword usage so you can use library with ANSI C if possible!
+#if !defined(__STDC_VERSION__)
+#  define ICE_FFI_INLINEDEF
+#elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+#  define ICE_FFI_INLINEDEF inline
+#endif
+
 // Allow to build DLL via ICE_FFI_DLLEXPORT or ICE_FFI_DLLIMPORT if desired!
 // Else, Just define API as static inlined C code!
 #if defined(ICE_FFI_PLATFORM_MICROSOFT)
 #  if defined(ICE_FFI_DLLEXPORT)
-#    define ICE_FFI_API ICE_FFI_EXTERNDEF __declspec(dllexport) inline
+#    define ICE_FFI_API ICE_FFI_EXTERNDEF __declspec(dllexport) ICE_FFI_INLINEDEF
 #  elif defined(ICE_FFI_DLLIMPORT)
-#    define ICE_FFI_API ICE_FFI_EXTERNDEF __declspec(dllimport) inline
+#    define ICE_FFI_API ICE_FFI_EXTERNDEF __declspec(dllimport) ICE_FFI_INLINEDEF
 #  else
-#    define ICE_FFI_API ICE_FFI_EXTERNDEF static inline
+#    define ICE_FFI_API ICE_FFI_EXTERNDEF static ICE_FFI_INLINEDEF
 #  endif
 #else
-#  define ICE_FFI_API ICE_FFI_EXTERNDEF static inline
+#  define ICE_FFI_API ICE_FFI_EXTERNDEF static ICE_FFI_INLINEDEF
 #endif
 
 #if defined(__cplusplus)
@@ -193,7 +200,6 @@ extern "C" {
 ///////////////////////////////////////////////////////////////////////////////////////////
 // ice_ffi DEFINITIONS
 ///////////////////////////////////////////////////////////////////////////////////////////
-
 typedef enum {
     ICE_FFI_TRUE    = 0,
     ICE_FFI_FALSE   = -1,
@@ -202,9 +208,8 @@ typedef enum {
 typedef void* ice_ffi_handle;
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-// ice_ffi API
+// ice_ffi FUNCTIONS
 ///////////////////////////////////////////////////////////////////////////////////////////
-
 ICE_FFI_API  ice_ffi_handle  ICE_FFI_CALLCONV  ice_ffi_load_library(char* path);                                    // Loads a shared library (dll, so, dylib, etc...) from path, Returns ice_ffi_handle as handle to the library on success or NULL on failure.
 ICE_FFI_API  ice_ffi_bool    ICE_FFI_CALLCONV  ice_ffi_unload_library(ice_ffi_handle lib);                          // Unloads a shared library (dll, so, dylib, etc...) with handle from path, Returns ICE_FFI_TRUE on unload success or ICE_FFI_FALSE on failure.
 ICE_FFI_API  ice_ffi_handle  ICE_FFI_CALLCONV  ice_ffi_get_address(ice_ffi_handle lib, char* proc_name);            // Gets address value of name proc_name from shared library handle, Returns ice_ffi_handle as handle to the address could be casted to function, variable, Or anything else on success or NULL on failure.

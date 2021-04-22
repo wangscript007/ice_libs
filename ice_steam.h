@@ -1,7 +1,7 @@
 // Written by Rabia Alhaffar in 4/April/2021
 // ice_steam.h
 // Single-Header Cross-Platform C library for working with Steamworks API!
-// Updated: 4/April/2021
+// Updated: 22/April/2021
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // ice_steam.h (FULL OVERVIEW)
@@ -40,16 +40,16 @@ Define ICE_STEAM_IMPL then include ice_steam.h in your C/C++ code!
 #include <stdint.h>
 #include <stdbool.h>
 
-// Define C interface for Windows libraries! ;)
-#ifndef CINTERFACE
-#  define CINTERFACE
-#endif
-
-// Disable security warnings for MSVC compiler, We don't want to use C11!
+// Disable security warnings for MSVC compiler, We don't want to force using C11!
 #ifdef _MSC_VER
 #  define _CRT_SECURE_NO_DEPRECATE
 #  define _CRT_SECURE_NO_WARNINGS
 #  pragma warning(disable:4996)
+#endif
+
+// Define C interface for Windows libraries! ;)
+#ifndef CINTERFACE
+#  define CINTERFACE
 #endif
 
 // Allow to use calling convention if desired...
@@ -100,6 +100,13 @@ Define ICE_STEAM_IMPL then include ice_steam.h in your C/C++ code!
 #  define ICE_STEAM_EXTERNDEF
 #endif
 
+// If using ANSI C, Disable inline keyword usage so you can use library with ANSI C if possible!
+#if !defined(__STDC_VERSION__)
+#  define ICE_STEAM_INLINEDEF
+#elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+#  define ICE_STEAM_INLINEDEF inline
+#endif
+
 // Detect Windows to allow building DLLs
 #if defined(__WIN) || defined(_WIN32_) || defined(_WIN64_) || defined(WIN32) || defined(__WIN32__) || defined(WIN64) || defined(__WIN64__) || defined(WINDOWS) || defined(_WINDOWS) || defined(__WINDOWS) || defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__) || defined(_MSC_VER) || defined(__WINDOWS__) || defined(_X360) || defined(XBOX360) || defined(__X360) || defined(__X360__) || defined(_XBOXONE) || defined(XBONE) || defined(XBOX) || defined(__XBOX__) || defined(__XBOX) || defined(__xbox__) || defined(__xbox) || defined(_XBOX) || defined(xbox)
 #  define ICE_STEAM_PLATFORM_MICROSOFT
@@ -109,14 +116,14 @@ Define ICE_STEAM_IMPL then include ice_steam.h in your C/C++ code!
 // Else, Just define API as static inlined C code!
 #if defined(ICE_STEAM_PLATFORM_MICROSOFT)
 #  if defined(ICE_STEAM_DLLEXPORT)
-#    define ICE_STEAM_API ICE_STEAM_EXTERNDEF __declspec(dllexport) inline
+#    define ICE_STEAM_API ICE_STEAM_EXTERNDEF __declspec(dllexport) ICE_STEAM_INLINEDEF
 #  elif defined(ICE_STEAM_DLLIMPORT)
-#    define ICE_STEAM_API ICE_STEAM_EXTERNDEF __declspec(dllimport) inline
+#    define ICE_STEAM_API ICE_STEAM_EXTERNDEF __declspec(dllimport) ICE_STEAM_INLINEDEF
 #  else
-#    define ICE_STEAM_API ICE_STEAM_EXTERNDEF static inline
+#    define ICE_STEAM_API ICE_STEAM_EXTERNDEF static ICE_STEAM_INLINEDEF
 #  endif
 #else
-#  define ICE_STEAM_API ICE_STEAM_EXTERNDEF static inline
+#  define ICE_STEAM_API ICE_STEAM_EXTERNDEF static ICE_STEAM_INLINEDEF
 #endif
 
 #if defined(__cplusplus)
@@ -2557,6 +2564,9 @@ typedef struct {
 	CSteamID m_steamIDUser;
 } GSStatsUnloaded_t;
 
+///////////////////////////////////////////////////////////////////////////////////////////
+// ice_steam FUNCTIONS
+///////////////////////////////////////////////////////////////////////////////////////////
 typedef bool (*PFN_SteamAPI_Init) ();
 typedef void (*PFN_SteamAPI_Shutdown) ();
 typedef bool (*PFN_SteamAPI_RestartAppIfNecessary) ( uint32 unOwnAppID );
@@ -3253,9 +3263,6 @@ typedef bool (*PFN_SteamAPI_ISteamGameServerStats_SetUserAchievement) (intptr_t 
 typedef bool (*PFN_SteamAPI_ISteamGameServerStats_ClearUserAchievement) (intptr_t instancePtr, CSteamID steamIDUser, const char * pchName);
 typedef SteamAPICall_t (*PFN_SteamAPI_ISteamGameServerStats_StoreUserStats) (intptr_t instancePtr, CSteamID steamIDUser);
 
-///////////////////////////////////////////////////////////////////////////////////////////
-// ice_steam API
-///////////////////////////////////////////////////////////////////////////////////////////
 PFN_SteamAPI_Init SteamAPI_Init;
 PFN_SteamAPI_Shutdown SteamAPI_Shutdown;
 PFN_SteamAPI_RestartAppIfNecessary SteamAPI_RestartAppIfNecessary;
