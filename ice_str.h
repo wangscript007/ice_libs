@@ -498,14 +498,14 @@ ICE_STR_API char* ICE_STR_CALLCONV ice_str_join(char** strs) {
 
     while (strs[arrlen] != NULL) arrlen++;
 
-    for (int i = 0; i < arrlen - 1; i++) {
+    for (int i = 0; i < arrlen; i++) {
         strs_size += ice_str_len(strs[i]);
     }
 
     char* res = (char*)malloc(strs_size + 1 * sizeof(char));
     int res_s = 0;
 
-    for (int i = 0; i < arrlen - 1; i++) {
+    for (int i = 0; i < arrlen; i++) {
         int lenstr = ice_str_len(strs[i]);
 
         for (int j = 0; j < lenstr; j++) {
