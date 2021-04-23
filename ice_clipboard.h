@@ -230,7 +230,7 @@ typedef enum {
 } ice_clipboard_bool;
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-// ice_clipboard API
+// ice_clipboard FUNCTIONS
 ///////////////////////////////////////////////////////////////////////////////////////////
 ICE_CLIPBOARD_API  ice_clipboard_bool  ICE_CLIPBOARD_CALLCONV  ice_clipboard_init(void);
 ICE_CLIPBOARD_API  ice_clipboard_bool  ICE_CLIPBOARD_CALLCONV  ice_clipboard_set(char* text);
