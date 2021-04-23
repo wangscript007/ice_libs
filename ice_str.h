@@ -192,6 +192,7 @@ typedef enum {
 // ice_str FUNCTIONS
 ///////////////////////////////////////////////////////////////////////////////////////////
 ICE_STR_API  int           ICE_STR_CALLCONV  ice_str_len(char* str);
+ICE_STR_API  int           ICE_STR_CALLCONV  ice_str_arr_len(char** arr);
 ICE_STR_API  char*         ICE_STR_CALLCONV  ice_str_sub(char* str, int from, int to);
 ICE_STR_API  char*         ICE_STR_CALLCONV  ice_str_strdup(char* str);
 ICE_STR_API  char*         ICE_STR_CALLCONV  ice_str_concat(char* s1, char* s2);
@@ -202,12 +203,14 @@ ICE_STR_API  char*         ICE_STR_CALLCONV  ice_str_upper(char* str);
 ICE_STR_API  char*         ICE_STR_CALLCONV  ice_str_lower(char* str);
 ICE_STR_API  char*         ICE_STR_CALLCONV  ice_str_captialize(char* str);
 ICE_STR_API  char**        ICE_STR_CALLCONV  ice_str_split(char* str, char delim);
+ICE_STR_API  char**        ICE_STR_CALLCONV  ice_str_splitlines(char* str);
 ICE_STR_API  char*         ICE_STR_CALLCONV  ice_str_join(char** strs);
 ICE_STR_API  char*         ICE_STR_CALLCONV  ice_str_join_with_delim(char** strs, char delim);
 ICE_STR_API  ice_str_bool  ICE_STR_CALLCONV  ice_str_begin(char* s1, char* s2);
 ICE_STR_API  ice_str_bool  ICE_STR_CALLCONV  ice_str_end(char* s1, char* s2);
 ICE_STR_API  char*         ICE_STR_CALLCONV  ice_str_rev(char* str);
 ICE_STR_API  void          ICE_STR_CALLCONV  ice_str_free(char* str);
+ICE_STR_API  void          ICE_STR_CALLCONV  ice_str_arr_free(char** arr);
 
 #if defined(__cplusplus)
 }
@@ -223,6 +226,12 @@ ICE_STR_API int ICE_STR_CALLCONV ice_str_len(char* str) {
     int len = 0;
     while (str[len] != '\0') len++;
     return len;
+}
+
+ICE_STR_API int ICE_STR_CALLCONV ice_str_arr_len(char** arr) {
+    int arrlen = 0;
+    while(arr[arrlen] != NULL) arrlen++;
+    return arrlen;
 }
 
 ICE_STR_API char* ICE_STR_CALLCONV ice_str_sub(char* str, int from, int to) {
@@ -471,6 +480,10 @@ ICE_STR_API char** ICE_STR_CALLCONV ice_str_split(char* str, char delim) {
     return res;
 }
 
+ICE_STR_API char** ICE_STR_CALLCONV ice_str_splitlines(char* str) {
+    return ice_str_split(str, '\n');
+}
+
 ICE_STR_API char* ICE_STR_CALLCONV ice_str_join(char** strs) {
     int arrlen = 0;
     int strs_size = 0;
@@ -560,6 +573,14 @@ ICE_STR_API char* ICE_STR_CALLCONV ice_str_rev(char* str) {
 
 ICE_STR_API void ICE_STR_CALLCONV ice_str_free(char* str) {
     free(str);
+}
+
+ICE_STR_API void ICE_STR_CALLCONV ice_str_arr_free(char** arr) {
+    for (int i = 0; i < ice_str_arr_len(arr); i++) {
+        free(arr[i]);
+    }
+    
+    free(arr);
 }
 
 #endif  // ICE_STR_IMPL

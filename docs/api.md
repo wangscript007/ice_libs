@@ -9,3 +9,4 @@
 - [ice_ram.h Documentation](ice_ram_api.md)
 - [ice_test.h Documentation](ice_test_api.md)
 - [ice_fs.h Documentation](ice_fs_api.md)
+- [ice_str.h Documentation](ice_str_api.md)
