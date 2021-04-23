@@ -1,7 +1,7 @@
 // Written by Rabia Alhaffar in 4/April/2021
 // ice_math.h
 // Single-Header Cross-Platform C library for working with Math!
-// Updated: 22/April/2021
+// Updated: 23/April/2021
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // ice_math.h (FULL OVERVIEW)

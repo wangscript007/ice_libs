@@ -1,7 +1,7 @@
 // Written by Rabia Alhaffar in 11/April/2021
 // ice_clipboard.h
 // Single-Header Cross-Platform Clipboard library written in C!
-// Updated: 22/April/2021
+// Updated: 3/April/2021
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // ice_clipboard.h (FULL OVERVIEW)

@@ -1,7 +1,7 @@
 // Written by Rabia Alhaffar in 9/April/2021
 // ice_time.h
 // Single-Header Cross-Platform C library for working with Time!
-// Updated: 22/April/2021
+// Updated: 23/April/2021
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // ice_time.h (FULL OVERVIEW)
@@ -387,13 +387,7 @@ ICE_TIME_API char* ICE_TIME_CALLCONV ice_time_string(void) {
         return NULL;
     }
     
-#if !defined(ICE_TIME_PLATFORM_MICROSOFT)
     return ctime(&t);
-#else
-    const char* d = (char*) malloc(32 * sizeof(char));
-    ctime_s(d, ~0, &t);
-    return d;
-#endif
 }
 
 ICE_TIME_API int ICE_TIME_CALLCONV ice_time_current_second(void) {
@@ -403,14 +397,9 @@ ICE_TIME_API int ICE_TIME_CALLCONV ice_time_current_second(void) {
         return NULL;
     }
     
-#if !defined(ICE_TIME_PLATFORM_MICROSOFT)
-    struct tm pt = *localtime(&t);
-#else
-    struct tm pt;
-    localtime_s(&pt, &t);
-#endif
-
-    return pt.tm_sec;
+    struct tm* pt;
+    pt = localtime(&t);
+    return pt->tm_sec;
 }
 
 ICE_TIME_API int ICE_TIME_CALLCONV ice_time_current_minute(void) {
@@ -420,14 +409,9 @@ ICE_TIME_API int ICE_TIME_CALLCONV ice_time_current_minute(void) {
         return NULL;
     }
     
-#if !defined(ICE_TIME_PLATFORM_MICROSOFT)
-    struct tm pt = *localtime(&t);
-#else
-    struct tm pt;
-    localtime_s(&pt, &t);
-#endif
-
-    return pt.tm_min;
+    struct tm* pt;
+    pt = localtime(&t);
+    return pt->tm_min;
 }
 
 ICE_TIME_API int ICE_TIME_CALLCONV ice_time_current_hour(void) {
@@ -437,14 +421,9 @@ ICE_TIME_API int ICE_TIME_CALLCONV ice_time_current_hour(void) {
         return NULL;
     }
     
-#if !defined(ICE_TIME_PLATFORM_MICROSOFT)
-    struct tm pt = *localtime(&t);
-#else
-    struct tm pt;
-    localtime_s(&pt, &t);
-#endif
-
-    return pt.tm_hour;
+    struct tm* pt;
+    pt = localtime(&t);
+    return pt->tm_hour;
 }
 
 ICE_TIME_API int ICE_TIME_CALLCONV ice_time_current_month_day(void) {
@@ -454,14 +433,9 @@ ICE_TIME_API int ICE_TIME_CALLCONV ice_time_current_month_day(void) {
         return NULL;
     }
     
-#if !defined(ICE_TIME_PLATFORM_MICROSOFT)
-    struct tm pt = *localtime(&t);
-#else
-    struct tm pt;
-    localtime_s(&pt, &t);
-#endif
-
-    return pt.tm_mday;
+    struct tm* pt;
+    pt = localtime(&t);
+    return pt->tm_mday;
 }
 
 ICE_TIME_API ice_time_month ICE_TIME_CALLCONV ice_time_current_month(void) {
@@ -471,14 +445,9 @@ ICE_TIME_API ice_time_month ICE_TIME_CALLCONV ice_time_current_month(void) {
         return ICE_TIME_JANUARY;
     }
     
-#if !defined(ICE_TIME_PLATFORM_MICROSOFT)
-    struct tm pt = *localtime(&t);
-#else
-    struct tm pt;
-    localtime_s(&pt, &t);
-#endif
-
-    return pt.tm_mon + 1;
+    struct tm* pt;
+    pt = localtime(&t);
+    return pt->tm_mon + 1;
 }
 
 ICE_TIME_API int ICE_TIME_CALLCONV ice_time_current_year(void) {
@@ -488,14 +457,9 @@ ICE_TIME_API int ICE_TIME_CALLCONV ice_time_current_year(void) {
         return NULL;
     }
     
-#if !defined(ICE_TIME_PLATFORM_MICROSOFT)
-    struct tm pt = *localtime(&t);
-#else
-    struct tm pt;
-    localtime_s(&pt, &t);
-#endif
-
-    return 1900 + pt.tm_year;
+    struct tm* pt;
+    pt = localtime(&t);
+    return 1900 + pt->tm_year;
 }
 
 ICE_TIME_API int ICE_TIME_CALLCONV ice_time_current_year_day(void) {
@@ -505,14 +469,9 @@ ICE_TIME_API int ICE_TIME_CALLCONV ice_time_current_year_day(void) {
         return NULL;
     }
     
-#if !defined(ICE_TIME_PLATFORM_MICROSOFT)
-    struct tm pt = *localtime(&t);
-#else
-    struct tm pt;
-    localtime_s(&pt, &t);
-#endif
-
-    return pt.tm_yday + 1;
+    struct tm* pt;
+    pt = localtime(&t);
+    return pt->tm_yday + 1;
 }
 
 ICE_TIME_API ice_time_day ICE_TIME_CALLCONV ice_time_current_week_day(void) {
@@ -522,14 +481,9 @@ ICE_TIME_API ice_time_day ICE_TIME_CALLCONV ice_time_current_week_day(void) {
         return ICE_TIME_SUNDAY;
     }
     
-#if !defined(ICE_TIME_PLATFORM_MICROSOFT)
-    struct tm pt = *localtime(&t);
-#else
-    struct tm pt;
-    localtime_s(&pt, &t);
-#endif
-
-    return pt.tm_wday + 1;
+    struct tm* pt;
+    pt = localtime(&t);
+    return pt->tm_wday + 1;
 }
 
 ICE_TIME_API ice_time_season ICE_TIME_CALLCONV ice_time_get_season(void) {

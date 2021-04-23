@@ -1,7 +1,7 @@
 // Written by Rabia Alhaffar in 14/April/2021
 // ice_al.h
 // Single-Header Cross-Platform C OpenAL loader!
-// Updated: 22/April/2021
+// Updated: 23/April/2021
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // ice_al.h (FULL OVERVIEW)

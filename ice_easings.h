@@ -1,7 +1,7 @@
 // Written by Rabia Alhaffar in 2/April/2021
 // ice_easings.h
 // Single-Header Cross-Platform C library for easings!
-// Updated: 3/April/2021
+// Updated: 23/April/2021
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // ice_easings.h (FULL OVERVIEW)

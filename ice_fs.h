@@ -1,7 +1,7 @@
 // Written by Rabia Alhaffar in 14/April/2021
 // ice_fs.h
 // Single-Header Cross-Platform C library for working with filesystems (File, Dir, etc...)
-// Updated: 22/April/2021
+// Updated: 23/April/2021
 
 // Special thanks to Toni Ronkko for Windows version of dirent.h
 

@@ -1,7 +1,7 @@
 // Written by Rabia Alhaffar in 18/April/2021
 // ice_ram.h
 // Single-Header Cross-Platform C library to get free and total RAM!
-// Updated: 22/April/2021
+// Updated: 23/April/2021
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // ice_ram.h (FULL OVERVIEW)
