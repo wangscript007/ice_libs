@@ -30,9 +30,9 @@ typedef void* ice_ffi_handle;
 #define ICE_FFI_CALLCONV_CDECL
 
 // Platforms could be defined (But not forced to...)
-#define ICE_FFI_PLATFORM_MICROSOFT      // Microsoft platforms
-#define ICE_FFI_PLATFORM_BEOS           // BeOS and Haiku
-#define ICE_FFI_PLATFORM_UNIX           // Elsewhere
+#define ICE_FFI_MICROSOFT      // Microsoft platforms
+#define ICE_FFI_BEOS           // BeOS and Haiku
+#define ICE_FFI_UNIX           // Elsewhere
 
 // If no platform defined, This definition will define itself
 // This definition sets platform depending on platform-specified C compiler definitions

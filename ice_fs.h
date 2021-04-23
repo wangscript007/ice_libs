@@ -144,16 +144,16 @@ THE SOFTWARE.
 #endif
 
 // If no platform defined, This definition will define itself!
-#if !(defined(ICE_FS_PLATFORM_MICROSOFT) || defined(ICE_FS_PLATFORM_UNIX))
+#if !(defined(ICE_FFI_MICROSOFT) || defined(ICE_FFI_UNIX))
 #  define ICE_FS_PLATFORM_AUTODETECTED
 #endif
 
 // Platform detection
 #if defined(ICE_FS_PLATFORM_AUTODETECTED)
 #  if defined(__WIN) || defined(_WIN32_) || defined(_WIN64_) || defined(WIN32) || defined(__WIN32__) || defined(WIN64) || defined(__WIN64__) || defined(WINDOWS) || defined(_WINDOWS) || defined(__WINDOWS) || defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__) || defined(_MSC_VER) || defined(__WINDOWS__) || defined(_X360) || defined(XBOX360) || defined(__X360) || defined(__X360__) || defined(_XBOXONE) || defined(XBONE) || defined(XBOX) || defined(__XBOX__) || defined(__XBOX) || defined(__xbox__) || defined(__xbox) || defined(_XBOX) || defined(xbox)
-#    define ICE_FS_PLATFORM_MICROSOFT
+#    define ICE_FFI_MICROSOFT
 #  else
-#    define ICE_FS_PLATFORM_UNIX
+#    define ICE_FFI_UNIX
 #  endif
 #endif
 
@@ -173,7 +173,7 @@ THE SOFTWARE.
 
 // Allow to build DLL via ICE_FS_DLLEXPORT or ICE_FS_DLLIMPORT if desired!
 // Else, Just define API as static inlined C code!
-#if defined(ICE_FS_PLATFORM_MICROSOFT)
+#if defined(ICE_FFI_MICROSOFT)
 #  if defined(ICE_FS_DLLEXPORT)
 #    define ICE_FS_API ICE_FS_EXTERNDEF __declspec(dllexport) ICE_FS_INLINEDEF
 #  elif defined(ICE_FS_DLLIMPORT)
@@ -252,7 +252,7 @@ ICE_FS_API  char*        ICE_FS_CALLCONV  ice_fs_file_content(char* fname);
 #include <io.h>
 #include <limits.h>
 
-#if defined(ICE_FS_PLATFORM_MICROSOFT)
+#if defined(ICE_FFI_MICROSOFT)
 #  include <windows.h>
 
 /*
@@ -1425,7 +1425,7 @@ ICE_FS_API ice_fs_bool ICE_FS_CALLCONV ice_fs_remove_dir(char* dir) {
 ICE_FS_API ice_fs_bool ICE_FS_CALLCONV ice_fs_copy_dir(char* d1, char* d2) {
     char res[512];
     
-#if defined(ICE_FS_PLATFORM_MICROSOFT)
+#if defined(ICE_FFI_MICROSOFT)
     sprintf(res, "xcopy %s %s\\%s /E /H /C /I\0", d1, d2, ice_fs_dir_name(d1));
 
 #else
@@ -1446,7 +1446,7 @@ ICE_FS_API ice_fs_bool ICE_FS_CALLCONV ice_fs_rename_file(char* d1, char* d2) {
 
 ICE_FS_API ice_fs_bool ICE_FS_CALLCONV ice_fs_copy_file(char* d1, char* d2) {
 
-#if defined(ICE_FS_PLATFORM_MICROSOFT)
+#if defined(ICE_FFI_MICROSOFT)
     return (CopyFileA(d1, d2, TRUE)) ? ICE_FS_TRUE : ICE_FS_FALSE;
     
 #else
@@ -1467,7 +1467,7 @@ ICE_FS_API char* ICE_FS_CALLCONV ice_fs_dir(char* dir) {
     for (int i = 0; i < lenstr; i++) {
         if (dir[i] == '\\' || dir[i] == '/') {
 
-#if defined(ICE_FS_PLATFORM_MICROSOFT)
+#if defined(ICE_FFI_MICROSOFT)
             res[i] = '\\';
 #else
             res[i] = '/';
@@ -1490,7 +1490,7 @@ ICE_FS_API char* ICE_FS_CALLCONV ice_fs_join_dir(char* d1, char* d2) {
         res[i] = d1[i];
     }
 
-#if defined(ICE_FS_PLATFORM_MICROSOFT)
+#if defined(ICE_FFI_MICROSOFT)
     res[lenstr1] = '\\';
     
 #else
@@ -1524,7 +1524,7 @@ ICE_FS_API char* ICE_FS_CALLCONV ice_fs_join_dirs(char** dirs) {
     for (int i = 0; i < dirs_count; i++) {
         strcpy(res, dirs[i]);
         
-#if defined(ICE_FS_PLATFORM_MICROSOFT)
+#if defined(ICE_FFI_MICROSOFT)
         strcpy(res, '\\');
 
 #else
@@ -1627,7 +1627,7 @@ ICE_FS_API ice_fs_bool ICE_FS_CALLCONV ice_fs_dir_exists(char* dir) {
 
 ICE_FS_API ice_fs_bool ICE_FS_CALLCONV ice_fs_create_dir(char* dir) {
     
-#if defined(ICE_FS_PLATFORM_MICROSOFT)
+#if defined(ICE_FFI_MICROSOFT)
     BOOL res = CreateDirectoryA(dir, NULL);
     
     if (!res) {
@@ -1686,7 +1686,7 @@ ICE_FS_API ice_fs_bool ICE_FS_CALLCONV ice_fs_file_exists(char* fname) {
 
 ICE_FS_API char* ICE_FS_CALLCONV ice_fs_full_file_path(char* fname) {
 
-#if defined(ICE_FS_PLATFORM_MICROSOFT)
+#if defined(ICE_FFI_MICROSOFT)
     char res[1024];
     BOOL ret = GetFullPathName(ice_fs_file_name(fname), 1024, res, NULL);
     

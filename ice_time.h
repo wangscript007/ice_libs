@@ -146,7 +146,7 @@ THE SOFTWARE.
 
 // Detect Windows to allow building DLLs
 #if defined(__WIN) || defined(_WIN32_) || defined(_WIN64_) || defined(WIN32) || defined(__WIN32__) || defined(WIN64) || defined(__WIN64__) || defined(WINDOWS) || defined(_WINDOWS) || defined(__WINDOWS) || defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__) || defined(_MSC_VER) || defined(__WINDOWS__) || defined(_X360) || defined(XBOX360) || defined(__X360) || defined(__X360__) || defined(_XBOXONE) || defined(XBONE) || defined(XBOX) || defined(__XBOX__) || defined(__XBOX) || defined(__xbox__) || defined(__xbox) || defined(_XBOX) || defined(xbox)
-#  define ICE_TIME_PLATFORM_MICROSOFT
+#  define ICE_TIME_MICROSOFT
 #endif
 
 // Allow to use them as extern functions if desired!
@@ -165,7 +165,7 @@ THE SOFTWARE.
 
 // Allow to build DLL via ICE_TIME_DLLEXPORT or ICE_TIME_DLLIMPORT if desired!
 // Else, Just define API as static inlined C code!
-#if defined(ICE_TIME_PLATFORM_MICROSOFT)
+#if defined(ICE_TIME_MICROSOFT)
 #  if defined(ICE_TIME_DLLEXPORT)
 #    define ICE_TIME_API ICE_TIME_EXTERNDEF __declspec(dllexport) ICE_TIME_INLINEDEF
 #  elif defined(ICE_TIME_DLLIMPORT)
@@ -360,7 +360,7 @@ ICE_TIME_API  double  ICE_TIME_CALLCONV  ice_time_century_to_decade(double centu
 #include <stdlib.h>
 #include <time.h>
 
-#if defined(ICE_TIME_PLATFORM_MICROSOFT)
+#if defined(ICE_TIME_MICROSOFT)
 #  include <windows.h>
 #endif
 
@@ -501,7 +501,7 @@ ICE_TIME_API ice_time_season ICE_TIME_CALLCONV ice_time_get_season(void) {
 }
 
 ICE_TIME_API void ICE_TIME_CALLCONV ice_time_sleep(unsigned int ms) {
-#if defined(ICE_TIME_PLATFORM_MICROSOFT)
+#if defined(ICE_TIME_MICROSOFT)
 Sleep(ms);
 
 #else

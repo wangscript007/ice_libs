@@ -53,7 +53,7 @@ typedef enum {
 #define ICE_TIME_CALLCONV_CDECL
 
 // Platforms could be defined (But not forced to...)
-#define ICE_TIME_PLATFORM_MICROSOFT      // Microsoft platforms (Not autodefined -> using Unix)
+#define ICE_TIME_MICROSOFT     // Microsoft platforms (Not autodefined -> using Unix)
 
 // If no platform defined, This definition will define itself
 // This definition sets platform depending on platform-specified C compiler definitions

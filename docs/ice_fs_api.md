@@ -25,8 +25,8 @@ typedef enum {
 #define ICE_FS_CALLCONV_CDECL
 
 // Platforms could be defined (But not forced to...)
-#define ICE_FS_PLATFORM_MICROSOFT       // Microsoft platforms
-#define ICE_FS_PLATFORM_UNIX            // Elsewhere
+#define ICE_FS_MICROSOFT       // Microsoft platforms
+#define ICE_FS_UNIX            // Elsewhere
 
 // If no platform defined, This definition will define itself
 // This definition sets platform depending on platform-specified C compiler definitions

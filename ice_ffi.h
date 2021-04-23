@@ -150,18 +150,18 @@ THE SOFTWARE.
 #endif
 
 // If no platform defined, This definition will define itself!
-#if !(defined(ICE_FFI_PLATFORM_MICROSOFT) || defined(ICE_FFI_PLATFORM_UNIX) || defined(ICE_FFI_PLATFORM_BEOS))
+#if !(defined(ICE_FFI_MICROSOFT) || defined(ICE_FFI_UNIX) || defined(ICE_FFI_BEOS))
 #  define ICE_FFI_PLATFORM_AUTODETECTED
 #endif
 
 // Platform detection
 #if defined(ICE_FFI_PLATFORM_AUTODETECTED)
 #  if defined(__WIN) || defined(_WIN32_) || defined(_WIN64_) || defined(WIN32) || defined(__WIN32__) || defined(WIN64) || defined(__WIN64__) || defined(WINDOWS) || defined(_WINDOWS) || defined(__WINDOWS) || defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__) || defined(_MSC_VER) || defined(__WINDOWS__) || defined(_X360) || defined(XBOX360) || defined(__X360) || defined(__X360__) || defined(_XBOXONE) || defined(XBONE) || defined(XBOX) || defined(__XBOX__) || defined(__XBOX) || defined(__xbox__) || defined(__xbox) || defined(_XBOX) || defined(xbox)
-#    define ICE_FFI_PLATFORM_MICROSOFT
+#    define ICE_FFI_MICROSOFT
 #  elif defined(__HAIKU) || defined(__HAIKU__) || defined(_HAIKU) || defined(__BeOS) || defined(__BEOS__) || defined(_BEOS)
-#    define ICE_FFI_PLATFORM_BEOS
+#    define ICE_FFI_BEOS
 #  else
-#    define ICE_FFI_PLATFORM_UNIX
+#    define ICE_FFI_UNIX
 #  endif
 #endif
 
@@ -181,7 +181,7 @@ THE SOFTWARE.
 
 // Allow to build DLL via ICE_FFI_DLLEXPORT or ICE_FFI_DLLIMPORT if desired!
 // Else, Just define API as static inlined C code!
-#if defined(ICE_FFI_PLATFORM_MICROSOFT)
+#if defined(ICE_FFI_MICROSOFT)
 #  if defined(ICE_FFI_DLLEXPORT)
 #    define ICE_FFI_API ICE_FFI_EXTERNDEF __declspec(dllexport) ICE_FFI_INLINEDEF
 #  elif defined(ICE_FFI_DLLIMPORT)
@@ -223,9 +223,9 @@ ICE_FFI_API  ice_ffi_handle  ICE_FFI_CALLCONV  ice_ffi_get_address(ice_ffi_handl
 ///////////////////////////////////////////////////////////////////////////////////////////
 #if defined(ICE_FFI_IMPL)
 
-#if defined(ICE_FFI_PLATFORM_MICROSOFT)
+#if defined(ICE_FFI_MICROSOFT)
 ///////////////////////////////////////////////////////////////////////////////////////////
-// ICE_FFI_PLATFORM_MICROSOFT IMPLEMENTATION    (Microsoft platforms)
+// ICE_FFI_MICROSOFT IMPLEMENTATION    (Microsoft platforms)
 ///////////////////////////////////////////////////////////////////////////////////////////
 #include <windows.h>
 
@@ -244,9 +244,9 @@ ICE_FFI_API ice_ffi_handle ICE_FFI_CALLCONV ice_ffi_get_address(ice_ffi_handle l
     return GetProcAddress(lib, proc_name);
 }
 
-#elif defined(ICE_FFI_PLATFORM_UNIX)
+#elif defined(ICE_FFI_UNIX)
 ///////////////////////////////////////////////////////////////////////////////////////////
-// ICE_FFI_PLATFORM_UNIX IMPLEMENTATION     (OSX, iOS, Android, Linux, BSD, etc...)
+// ICE_FFI_UNIX IMPLEMENTATION     (OSX, iOS, Android, Linux, BSD, etc...)
 ///////////////////////////////////////////////////////////////////////////////////////////
 #include <dlfcn.h>
 
@@ -265,9 +265,9 @@ ICE_FFI_API ice_ffi_handle ICE_FFI_CALLCONV ice_ffi_get_address(ice_ffi_handle l
     return dlsym(lib, proc_name);
 }
 
-#elif defined(ICE_FFI_PLATFORM_BEOS)
+#elif defined(ICE_FFI_BEOS)
 ///////////////////////////////////////////////////////////////////////////////////////////
-// ICE_FFI_PLATFORM_BEOS IMPLEMENTATION     (Haiku and BeOS)
+// ICE_FFI_BEOS IMPLEMENTATION     (Haiku and BeOS)
 ///////////////////////////////////////////////////////////////////////////////////////////
 #include <image.h>
 
