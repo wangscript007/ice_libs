@@ -201,13 +201,14 @@ ICE_STR_API  char*         ICE_STR_CALLCONV  ice_str_char(char* str, int index);
 ICE_STR_API  ice_str_bool  ICE_STR_CALLCONV  ice_str_match(char* s1, char* s2);
 ICE_STR_API  char*         ICE_STR_CALLCONV  ice_str_upper(char* str);
 ICE_STR_API  char*         ICE_STR_CALLCONV  ice_str_lower(char* str);
-ICE_STR_API  char*         ICE_STR_CALLCONV  ice_str_captialize(char* str);
+ICE_STR_API  char*         ICE_STR_CALLCONV  ice_str_capitalize(char* str);
 ICE_STR_API  char**        ICE_STR_CALLCONV  ice_str_split(char* str, char delim);
 ICE_STR_API  char**        ICE_STR_CALLCONV  ice_str_splitlines(char* str);
 ICE_STR_API  char*         ICE_STR_CALLCONV  ice_str_join(char** strs);
 ICE_STR_API  char*         ICE_STR_CALLCONV  ice_str_join_with_delim(char** strs, char delim);
 ICE_STR_API  ice_str_bool  ICE_STR_CALLCONV  ice_str_begin(char* s1, char* s2);
 ICE_STR_API  ice_str_bool  ICE_STR_CALLCONV  ice_str_end(char* s1, char* s2);
+ICE_STR_API  ice_str_bool  ICE_STR_CALLCONV  ice_str_end_char(char* str, char ch);
 ICE_STR_API  char*         ICE_STR_CALLCONV  ice_str_rev(char* str);
 ICE_STR_API  void          ICE_STR_CALLCONV  ice_str_free(char* str);
 ICE_STR_API  void          ICE_STR_CALLCONV  ice_str_arr_free(char** arr);
@@ -230,32 +231,31 @@ ICE_STR_API int ICE_STR_CALLCONV ice_str_len(char* str) {
 
 ICE_STR_API int ICE_STR_CALLCONV ice_str_arr_len(char** arr) {
     int arrlen = 0;
-    while(arr[arrlen] != NULL) arrlen++;
+    while (arr[arrlen] != NULL) arrlen++;
     return arrlen;
 }
 
 ICE_STR_API char* ICE_STR_CALLCONV ice_str_sub(char* str, int from, int to) {
-    char* res = (char*) calloc((to - from) + 1, sizeof(char));
+    char* res = (char*) malloc((to - from) + 1 * sizeof(char));
     int count = 0;
-    
+
     for (int i = from; i <= to; i++) {
         res[count] = str[i];
         count++;
     }
-    
-    res[count + 1] = '\0';
-    
+
+    res[count] = '\0';
     return res;
 }
 
 ICE_STR_API char* ICE_STR_CALLCONV ice_str_strdup(char* str) {
     int len = ice_str_len(str);
-    char* res = (char*) calloc(len + 1, sizeof(char));
-    
+    char* res = (char*) malloc(len + 1 * sizeof(char));
+
     for (int i = 0; i < len; i++) {
         res[i] = str[i];
     }
-    
+
     res[len] = '\0';
     return res;
 }
@@ -263,41 +263,39 @@ ICE_STR_API char* ICE_STR_CALLCONV ice_str_strdup(char* str) {
 ICE_STR_API char* ICE_STR_CALLCONV ice_str_concat(char* s1, char* s2) {
     int len_str1 = ice_str_len(s1);
     int len_str2 = ice_str_len(s2);
-    
-    char* res = (char*) calloc((len_str1 + len_str2 + 1), sizeof(char));
+
+    char* res = (char*) malloc((len_str1 + len_str2) * sizeof(char));
     for (int i = 0; i < len_str1; i++) {
         res[i] = s1[i];
     }
-    
+
     for (int i = 0; i < len_str2; i++) {
         res[len_str1 + i] = s2[i];
     }
-    
-    res[len_str1 + len_str2 + 1] = '\0';
-    
+
+    res[len_str1 + len_str2] = '\0';
     return res;
 }
 
 ICE_STR_API char* ICE_STR_CALLCONV ice_str_rep(char* str, int count) {
     int lenstr = ice_str_len(str);
-    char* res = (char*) calloc((lenstr * count) + 1, sizeof(char));
+    char* res = (char*)malloc((lenstr * count) + 1 * sizeof(char));
     int times = 0;
-    
+
     for (int i = 0; i < count; i++) {
         for (int j = 0; j < lenstr; j++) {
-            res[times + j] = str[j];
+            res[(lenstr * i) + j] = str[j];
         }
-        
+
         times++;
     }
-    
-    res[times + lenstr] = '\0';
-    
+
+    res[lenstr * count] = '\0';
     return res;
 }
 
 ICE_STR_API char* ICE_STR_CALLCONV ice_str_char(char* str, int index) {
-    char* c = (char*) calloc(2, sizeof(char));
+    char* c = (char*) malloc(2 * sizeof(char));
     c[0] = str[index];
     c[1] = '\0';
     return c;
@@ -307,26 +305,26 @@ ICE_STR_API ice_str_bool ICE_STR_CALLCONV ice_str_match(char* s1, char* s2) {
     int len_str1 = ice_str_len(s1);
     int len_str2 = ice_str_len(s2);
     int matches = 0;
-    
+
     if (len_str1 != len_str2) {
         return ICE_STR_FALSE;
     }
-    
+
     for (int i = 0; i < len_str1; i++) {
         if (s1[i] == s2[i]) {
             matches++;
         }
     }
-    
+
     return (matches == len_str1) ? ICE_STR_TRUE : ICE_STR_FALSE;
 }
 
 ICE_STR_API char* ICE_STR_CALLCONV ice_str_upper(char* str) {
     int lenstr = ice_str_len(str);
-    char* res = (char*) calloc(lenstr + 1, sizeof(char));
-    
+    char* res = (char*)malloc(lenstr + 1 * sizeof(char));
+
     for (int i = 0; i < lenstr; i++) {
-        if (str[i] == 'a') res[i] = 'A'; 
+        if (str[i] == 'a') res[i] = 'A';
         else if (str[i] == 'b') res[i] = 'B';
         else if (str[i] == 'c') res[i] = 'C';
         else if (str[i] == 'd') res[i] = 'D';
@@ -354,17 +352,17 @@ ICE_STR_API char* ICE_STR_CALLCONV ice_str_upper(char* str) {
         else if (str[i] == 'z') res[i] = 'Z';
         else res[i] = str[i];
     }
-    
+
     res[lenstr] = '\0';
     return res;
 }
 
 ICE_STR_API char* ICE_STR_CALLCONV ice_str_lower(char* str) {
     int lenstr = ice_str_len(str);
-    char* res = (char*) calloc(lenstr + 1, sizeof(char));
-    
+    char* res = (char*)malloc(lenstr + 1 * sizeof(char));
+
     for (int i = 0; i < lenstr; i++) {
-        if (str[i] == 'A') res[i] = 'a'; 
+        if (str[i] == 'A') res[i] = 'a';
         else if (str[i] == 'B') res[i] = 'b';
         else if (str[i] == 'C') res[i] = 'c';
         else if (str[i] == 'D') res[i] = 'd';
@@ -392,15 +390,15 @@ ICE_STR_API char* ICE_STR_CALLCONV ice_str_lower(char* str) {
         else if (str[i] == 'Z') res[i] = 'z';
         else res[i] = str[i];
     }
-    
+
     res[lenstr] = '\0';
     return res;
 }
 
-ICE_STR_API char* ICE_STR_CALLCONV ice_str_captialize(char* str) {
+ICE_STR_API char* ICE_STR_CALLCONV ice_str_capitalize(char* str) {
     int lenstr = ice_str_len(str);
-    char* res = (char*) calloc(lenstr + 1, sizeof(char));
-    
+    char* res = (char*)malloc(lenstr + 1 * sizeof(char));
+
     if (str[0] == 'a') res[0] = 'A';
     else if (str[0] == 'b') res[0] = 'B';
     else if (str[0] == 'c') res[0] = 'C';
@@ -428,11 +426,11 @@ ICE_STR_API char* ICE_STR_CALLCONV ice_str_captialize(char* str) {
     else if (str[0] == 'y') res[0] = 'Y';
     else if (str[0] == 'z') res[0] = 'Z';
     else res[0] = str[0];
-    
+
     for (int i = 1; i < lenstr; i++) {
         res[i] = str[i];
     }
-    
+
     res[lenstr] = '\0';
     return res;
 }
@@ -442,32 +440,43 @@ ICE_STR_API char** ICE_STR_CALLCONV ice_str_split(char* str, char delim) {
     int count = 0;
     int elems = 0;
     int lenstr = ice_str_len(str);
-    
+
     for (int i = 0; i < lenstr; i++) {
-       if (str[i] == delim) {
-           arrlen++;
-       }
+        if (str[i] == delim) {
+            arrlen++;
+        }
     }
-    
-    int* arr_elem_lengths = (int*) calloc(arrlen, sizeof(int));
-    
+
+    ice_str_bool last_char_not_delim = (ice_str_end_char(str, delim) == ICE_STR_FALSE) ? ICE_STR_TRUE : ICE_STR_FALSE;
+
+    if (last_char_not_delim == ICE_STR_TRUE) {
+        arrlen++;
+    }
+
+    int* arr_elem_lengths = (int*)malloc(arrlen * sizeof(int));
+
     for (int i = 0; i < lenstr; i++) {
-       count++;
-       
-       if (str[i] == delim) {
-           arr_elem_lengths[elems] = count;
-           elems++;
-       }
+        count++;
+
+        if (str[i] == delim) {
+            arr_elem_lengths[elems] = count;
+            elems++;
+        }
     }
-    
+
+    if (last_char_not_delim == ICE_STR_TRUE) {
+        arr_elem_lengths[arrlen - 1] = lenstr + 1;
+        elems++;
+    }
+
     int sum = 0;
-    
+
     for (int i = 0; i < elems; i++) {
         sum += arr_elem_lengths[i];
     }
-    
-    char** res = (char**) calloc(sum, sizeof(char));
-    
+
+    char** res = (char**)malloc(sum * sizeof(char));
+
     for (int i = 0; i < elems; i++) {
         if (i == 0) {
             res[i] = ice_str_sub(str, 0, arr_elem_lengths[i] - 2);
@@ -475,8 +484,7 @@ ICE_STR_API char** ICE_STR_CALLCONV ice_str_split(char* str, char delim) {
             res[i] = ice_str_sub(str, arr_elem_lengths[i - 1], arr_elem_lengths[i] - 2);
         }
     }
-    
-    free(arr_elem_lengths);
+
     return res;
 }
 
@@ -487,26 +495,26 @@ ICE_STR_API char** ICE_STR_CALLCONV ice_str_splitlines(char* str) {
 ICE_STR_API char* ICE_STR_CALLCONV ice_str_join(char** strs) {
     int arrlen = 0;
     int strs_size = 0;
-    
+
     while (strs[arrlen] != NULL) arrlen++;
-    
+
     for (int i = 0; i < arrlen - 1; i++) {
         strs_size += ice_str_len(strs[i]);
     }
-    
-    char* res = (char*) calloc(strs_size + 1, sizeof(char));
+
+    char* res = (char*)malloc(strs_size + 1 * sizeof(char));
     int res_s = 0;
-    
+
     for (int i = 0; i < arrlen - 1; i++) {
         int lenstr = ice_str_len(strs[i]);
-        
+
         for (int j = 0; j < lenstr; j++) {
             res[j + res_s] = strs[i][j];
         }
-        
+
         res_s += lenstr;
     }
-    
+
     res[res_s] = '\0';
     return res;
 }
@@ -516,22 +524,22 @@ ICE_STR_API char* ICE_STR_CALLCONV ice_str_join_with_delim(char** strs, char del
     int res_s = 0;
     int arrlen = 0;
     int strs_size = 0;
-    
+
     while (strs[arrlen] != NULL) arrlen++;
-    
+
     for (int i = 0; i < arrlen; i++) {
         strs_size += ice_str_len(strs[i]);
     }
-    
-    char* res = (char*) malloc(1 + strs_size + arrlen * sizeof(char));
-    
+
+    char* res = (char*)malloc(1 + strs_size + arrlen * sizeof(char));
+
     for (int i = 0; i < arrlen; i++) {
         int lstr = ice_str_len(strs[i]);
-        
+
         for (int j = 0; j < lstr; j++) {
             res[j + res_s + ((i > 0) ? 1 : 0)] = strs[i][j];
         }
-        
+
         if (i != 0) {
             res[res_s] = delim;
             res_s += lstr + count++;
@@ -539,34 +547,39 @@ ICE_STR_API char* ICE_STR_CALLCONV ice_str_join_with_delim(char** strs, char del
             res_s += lstr + count++;
         }
     }
-    
-    res[res_s] = '\0';
+
+    res[res_s - 1] = '\0';
     return res;
 }
 
 ICE_STR_API ice_str_bool ICE_STR_CALLCONV ice_str_begin(char* s1, char* s2) {
     int lenstr = ice_str_len(s2);
-    char* sub1 = ice_str_sub(s1, 0, lenstr - 1);
+    char* sub = ice_str_sub(s1, 0, lenstr - 1);
     
-    return ice_str_match(sub1, s2);
+    return ice_str_match(sub, s2);
 }
 
 ICE_STR_API ice_str_bool ICE_STR_CALLCONV ice_str_end(char* s1, char* s2) {
     int lenstr1 = ice_str_len(s1);
     int lenstr2 = ice_str_len(s2);
-    char* sub = ice_str_sub(s1, lenstr2 - lenstr1, lenstr1);
-    
+
+    char* sub = ice_str_sub(s1, lenstr1 - lenstr2, lenstr1 - 1);
     return ice_str_match(sub, s2);
+}
+
+ICE_STR_API ice_str_bool ICE_STR_CALLCONV ice_str_end_char(char* str, char ch) {
+    int lenstr = ice_str_len(str);
+    return (str[lenstr - 1] == ch) ? ICE_STR_TRUE : ICE_STR_FALSE;
 }
 
 ICE_STR_API char* ICE_STR_CALLCONV ice_str_rev(char* str) {
     int lenstr = ice_str_len(str);
-    char* res = (char*) calloc(lenstr, 1);
-    
+    char* res = (char*)malloc(lenstr * sizeof(char));
+
     for (int i = 0; i < lenstr; i++) {
         res[(lenstr - 1) - i] = str[i];
     }
-    
+
     res[lenstr] = '\0';
     return res;
 }
