@@ -3496,13 +3496,6 @@ ICE_MATH_API double* ICE_MATH_CALLCONV ice_math_tex3d_tex_vertices(ice_math_rect
 }
 
 ICE_MATH_API void ICE_MATH_CALLCONV ice_math_free_vertices(double* vertices) {
-    int len = 0;
-    while (vertices[len] != NULL) len++;
-    
-    for (int i = 0; i < len; i++) {
-        free(vertices[i]);
-    }
-    
     free(vertices);
 }
 
