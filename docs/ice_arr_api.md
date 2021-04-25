@@ -18,7 +18,7 @@ typedef int (*ice_arr_res_func)(double a, double b);    // Comparison function f
 
 // Array struct
 typedef struct ice_arr_array {
-    double* arr;    // Array content which contains numbers (Allocated by calloc)
+    double* arr;    // Array content which contains numbers (Allocated by ICE_ARR_MALLOC)
     int len;        // Array length
     int real_len;   // Real allocation length (x1.5 array length, Increases when pushing elements if array's length bigger than real_len)
 } ice_arr_array;
