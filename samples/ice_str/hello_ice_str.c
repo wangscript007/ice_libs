@@ -36,7 +36,7 @@ int main(int argc, char** argv) {
     printf("splitted str1 array element 4: %s\n", splitted[3]);
     
     // NOTE: Although ice_str uses malloc, You are in need of using calloc so your program won't read length of array wrong.
-    char** strarr = (char**) calloc(31, sizeof(char));
+    char** strarr = (char**) ICE_STR_CALLOC(31, sizeof(char));
     strarr[0] = "abcdefghij";
     strarr[1] = "klmnopqrst";
     strarr[2] = "uvwxyz1234\0";

@@ -273,7 +273,7 @@ ICE_ARR_API  void           ICE_ARR_CALLCONV  ice_arr_sort_ex(ice_arr_array* arr
 
 ICE_ARR_API ice_arr_array ICE_ARR_CALLCONV ice_arr_new(int len) {
     ice_arr_array res = (ice_arr_array) {
-        (double*) ICE_ARR_CALLOC(len + (len / 2), sizeof(double)),
+        (double*) ICE_ARR_MALLOC((len + (len / 2)) * sizeof(double)),
         len,
         len + (len / 2),
     };
