@@ -1,7 +1,7 @@
 // Written by Rabia Alhaffar in 19/April/2021
 // ice_str.h
 // Single-Header Cross-Platform C library for working with strings!
-// Updated: 23/April/2021
+// Updated: 25/April/2021
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // ice_str.h (FULL OVERVIEW)
@@ -602,11 +602,9 @@ ICE_STR_API void ICE_STR_CALLCONV ice_str_free(char* str) {
 }
 
 ICE_STR_API void ICE_STR_CALLCONV ice_str_arr_free(char** arr) {
-    /*
     for (int i = 0; i < ice_str_arr_len(arr); i++) {
         ICE_STR_FREE(arr[i]);
     }
-    */
     
     ICE_STR_FREE(arr);
 }

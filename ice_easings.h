@@ -1,7 +1,7 @@
 // Written by Rabia Alhaffar in 2/April/2021
 // ice_easings.h
 // Single-Header Cross-Platform C library for easings!
-// Updated: 23/April/2021
+// Updated: 25/April/2021
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // ice_easings.h (FULL OVERVIEW)
@@ -13,9 +13,6 @@ Robert Penner's easings!
 
 [2] USAGE:
 Define ICE_EASINGS_IMPL then include ice_easings.h in your C/C++ code!
-
-[3] LICENSES:
-See licenses.txt for licenses of each lib!
 */
 
 ///////////////////////////////////////////////////////////////////////////////////////////
