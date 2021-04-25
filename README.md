@@ -38,7 +38,7 @@ ice_libs is collection of Single-Header C libraries, Designed to introduce stuff
 
 > NOTE: Unix-based platforms means Linux, iOS, OSX, Haiku, BeOS, and Android.
 
-> For docs see [here](https://github.com/Rabios/ice_libs/blob/master/docs/README.md)
+> For docs of ice_libs see [here!](https://github.com/Rabios/ice_libs/blob/master/docs/README.md)
 
 ### Special Thanks
 
