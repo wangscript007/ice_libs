@@ -41,6 +41,12 @@ typedef enum {
 // In case you want to build DLL on Microsoft Windows!
 #define ICE_CLIPBOARD_DLLEXPORT
 #define ICE_CLIPBOARD_DLLIMPORT
+
+// Custom memory allocators
+#define ICE_CLIPBOARD_MALLOC(sz)            // malloc(sz)
+#define ICE_CLIPBOARD_CALLOC(n, sz)         // calloc(n, sz)
+#define ICE_CLIPBOARD_REALLOC(ptr, sz)      // realloc(ptr, sz)
+#define ICE_CLIPBOARD_FREE(ptr)             // free(ptr)
 ```
 
 ### Functions

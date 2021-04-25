@@ -35,6 +35,12 @@ typedef enum {
 // In case you want to build DLL on Microsoft Windows!
 #define ICE_FS_DLLEXPORT
 #define ICE_FS_DLLIMPORT
+
+// Custom memory allocators
+#define ICE_FS_MALLOC(sz)           // malloc(sz)
+#define ICE_FS_CALLOC(n, sz)        // calloc(n, sz)
+#define ICE_FS_REALLOC(ptr, sz)     // realloc(ptr, sz)
+#define ICE_FS_FREE(ptr)            // free(ptr)
 ```
 
 ### Functions

@@ -760,7 +760,7 @@ ICE_ARR_API void ICE_ARR_CALLCONV ice_arr_sort_ex(ice_arr_array* arr, ice_arr_re
     
     for (i = 0; i < arr->len; ++i) {
         for (j = i + 1; j < arr->len; ++j) {
-            if (f(arr->arr[i], arr->arr[j]) == true) {
+            if ((int) f(arr->arr[i], arr->arr[j]) == 1) {
                 temp = arr->arr[i];
                 arr->arr[i] = arr->arr[j];
                 arr->arr[j] = temp;

@@ -22,6 +22,36 @@ typedef struct ice_arr_array {
     int len;        // Array length
     int real_len;   // Real allocation length (x1.5 array length, Increases when pushing elements if array's length bigger than real_len)
 } ice_arr_array;
+
+// Definitions
+// Implements ice_arr source code, Works same as #pragma once
+#define ICE_ARR_IMPL
+
+// Allow to use ice_arr functions as extern ones...
+#define ICE_ARR_EXTERN 
+
+// Call conventions (You could define one of these to set compiler calling convention)
+#define ICE_ARR_CALLCONV_VECTORCALL
+#define ICE_ARR_CALLCONV_FASTCALL
+#define ICE_ARR_CALLCONV_STDCALL
+#define ICE_ARR_CALLCONV_CDECL
+
+// Platforms could be defined (But not forced to...)
+#define ICE_ARR_MICROSOFT      // Microsoft platforms (Not autodefined -> using Unix)
+
+// If no platform defined, This definition will define itself
+// This definition sets platform depending on platform-specified C compiler definitions
+#define ICE_ARR_PLATFORM_AUTODETECTED
+
+// In case you want to build DLL on Microsoft Windows!
+#define ICE_ARR_DLLEXPORT
+#define ICE_ARR_DLLIMPORT
+
+// Custom memory allocators
+#define ICE_ARR_MALLOC(sz)              // malloc(sz)
+#define ICE_ARR_CALLOC(n, sz)           // calloc(n, sz)
+#define ICE_ARR_REALLOC(ptr, sz)        // realloc(ptr, sz)
+#define ICE_ARR_FREE(ptr)               // free(ptr)
 ```
 
 ### Functions

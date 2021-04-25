@@ -644,7 +644,7 @@ static _WDIR *_wopendir(const wchar_t *dirname)
 	}
 
 	/* Allocate new _WDIR structure */
-	_WDIR *dirp = (_WDIR*) malloc(sizeof(struct _WDIR));
+	_WDIR *dirp = (_WDIR*) ICE_FS_MALLOC(sizeof(struct _WDIR));
 	if (!dirp)
 		return NULL;
 
@@ -668,7 +668,7 @@ static _WDIR *_wopendir(const wchar_t *dirname)
 #endif
 
 	/* Allocate room for absolute directory name and search pattern */
-	dirp->patt = (wchar_t*) malloc(sizeof(wchar_t) * n + 16);
+	dirp->patt = (wchar_t*) ICE_FS_MALLOC(sizeof(wchar_t) * n + 16);
 	if (dirp->patt == NULL)
 		goto exit_closedir;
 
@@ -807,10 +807,10 @@ static int _wclosedir(_WDIR *dirp)
 		FindClose(dirp->handle);
 
 	/* Release search pattern */
-	free(dirp->patt);
+	ICE_FS_FREE(dirp->patt);
 
 	/* Release directory structure */
-	free(dirp);
+	ICE_FS_FREE(dirp);
 	return /*success*/0;
 }
 
@@ -911,7 +911,7 @@ static DIR *opendir(const char *dirname)
 	}
 
 	/* Allocate memory for DIR structure */
-	struct DIR *dirp = (DIR*) malloc(sizeof(struct DIR));
+	struct DIR *dirp = (DIR*) ICE_FS_MALLOC(sizeof(struct DIR));
 	if (!dirp)
 		return NULL;
 
@@ -932,7 +932,7 @@ static DIR *opendir(const char *dirname)
 
 	/* Failure */
 exit_failure:
-	free(dirp);
+	ICE_FS_FREE(dirp);
 	return NULL;
 }
 
@@ -1039,7 +1039,7 @@ static int closedir(DIR *dirp)
 	dirp->wdirp = NULL;
 
 	/* Release multi-byte character version */
-	free(dirp);
+	ICE_FS_FREE(dirp);
 	return ok;
 
 exit_failure:
@@ -1081,7 +1081,7 @@ static int scandir(
 	while (1) {
 		/* Allocate room for a temporary directory entry */
 		if (!tmp) {
-			tmp = (struct dirent*) malloc(sizeof(struct dirent));
+			tmp = (struct dirent*) ICE_FS_MALLOC(sizeof(struct dirent));
 			if (!tmp)
 				goto exit_failure;
 		}
@@ -1105,7 +1105,7 @@ static int scandir(
 			size_t num_entries = size * 2 + 16;
 
 			/* Allocate new pointer table or enlarge existing */
-			void *p = realloc(files, sizeof(void*) * num_entries);
+			void *p = ICE_FS_REALLOC(files, sizeof(void*) * num_entries);
 			if (!p)
 				goto exit_failure;
 
@@ -1122,11 +1122,11 @@ static int scandir(
 exit_failure:
 	/* Release allocated file entries */
 	for (size_t i = 0; i < size; i++) {
-		free(files[i]);
+		ICE_FS_FREE(files[i]);
 	}
 
 	/* Release the pointer table */
-	free(files);
+	ICE_FS_FREE(files);
 	files = NULL;
 
 	/* Exit with error code */
@@ -1147,7 +1147,7 @@ exit_success:
 
 exit_status:
 	/* Release temporary directory entry, if we had one */
-	free(tmp);
+	ICE_FS_FREE(tmp);
 
 	/* Close directory stream */
 	closedir(dir);
@@ -1304,7 +1304,7 @@ static void dirent_set_errno(int error)
 #endif
 
 ICE_FS_API char* ICE_FS_CALLCONV ice_fs_strfrom(char* str, int from, int to) {
-    char* res = (char*) malloc((to - from) * sizeof(char));
+    char* res = (char*) ICE_FS_MALLOC((to - from) * sizeof(char));
     int count = 0;
     
     for (int i = from; i <= to; i++) {
@@ -1353,7 +1353,7 @@ ICE_FS_API char* ICE_FS_CALLCONV ice_fs_home(void) {
     size_t reqsize;
 
     getenv_s(&reqsize, NULL, 0, "USERPROFILE");
-    var = (char*) malloc(reqsize * sizeof(char));
+    var = (char*) ICE_FS_MALLOC(reqsize * sizeof(char));
     getenv_s(&reqsize, var, reqsize, "USERPROFILE");
     
     return var;
