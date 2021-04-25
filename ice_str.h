@@ -235,7 +235,6 @@ ICE_STR_API  void          ICE_STR_CALLCONV  ice_str_arr_free(char** arr);
 // ice_str IMPLEMENTATION
 ///////////////////////////////////////////////////////////////////////////////////////////
 #if defined(ICE_STR_IMPL)
-#include <stdlib.h>
 
 ICE_STR_API int ICE_STR_CALLCONV ice_str_len(char* str) {
     int len = 0;

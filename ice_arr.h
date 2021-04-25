@@ -269,7 +269,6 @@ ICE_ARR_API  void           ICE_ARR_CALLCONV  ice_arr_sort_ex(ice_arr_array* arr
 // ice_arr IMPLEMENTATION
 ///////////////////////////////////////////////////////////////////////////////////////////
 #if defined(ICE_ARR_IMPL)
-#include <stdlib.h>
 
 ICE_ARR_API ice_arr_array ICE_ARR_CALLCONV ice_arr_new(int len) {
     ice_arr_array res = (ice_arr_array) {

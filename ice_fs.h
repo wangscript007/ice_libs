@@ -261,7 +261,6 @@ ICE_FS_API  char*        ICE_FS_CALLCONV  ice_fs_file_content(char* fname);
 ///////////////////////////////////////////////////////////////////////////////////////////
 #if defined(ICE_FS_IMPL)
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <io.h>
 #include <limits.h>
@@ -302,7 +301,6 @@ ICE_FS_API  char*        ICE_FS_CALLCONV  ice_fs_file_content(char* fname);
 #include <stdarg.h>
 #include <wchar.h>
 #include <string.h>
-#include <stdlib.h>
 #include <malloc.h>
 #include <sys/types.h>
 #include <sys/stat.h>
