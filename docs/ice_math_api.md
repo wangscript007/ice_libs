@@ -87,6 +87,12 @@ typedef struct ice_math_mtrand {
 #define ICE_MATH_DLLEXPORT
 #define ICE_MATH_DLLIMPORT
 
+// Custom memory allocators
+#define ICE_MATH_MALLOC(sz)             // malloc(sz)
+#define ICE_MATH_CALLOC(n, sz)          // calloc(n, sz)
+#define ICE_MATH_REALLOC(ptr, sz)       // realloc(ptr, sz)
+#define ICE_MATH_FREE(ptr)              // free(ptr)
+
 // Library definitions
 #define ICE_MATH_PI                     3.14159265358979323846
 #define ICE_MATH_E                      2.7182818284590452354

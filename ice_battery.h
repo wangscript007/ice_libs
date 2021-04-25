@@ -634,7 +634,6 @@ ICE_BATTERY_API ice_battery_bool ICE_BATTERY_CALLCONV ice_battery_close(void) {
 
 #elif defined(ICE_BATTERY_LINUX)
 #include <stdio.h>
-#include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
 #include <sys/types.h>

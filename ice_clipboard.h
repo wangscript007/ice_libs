@@ -649,6 +649,9 @@ ICE_CLIPBOARD_API ice_clipboard_bool ICE_CLIPBOARD_CALLCONV ice_clipboard_close(
 }
 
 #elif defined(ICE_CLIPBOARD_NULL)
+#include <stdio.h>
+#include <string.h>
+
 FILE* ice_clipboard_data;
 
 ICE_CLIPBOARD_API ice_clipboard_bool ICE_CLIPBOARD_CALLCONV ice_clipboard_init(void) {

@@ -1,7 +1,7 @@
 // Written by Rabia Alhaffar in 4/April/2021
 // ice_math.h
 // Single-Header Cross-Platform C library for working with Math!
-// Updated: 24/April/2021
+// Updated: 25/April/2021
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // ice_math.h (FULL OVERVIEW)
@@ -179,6 +179,20 @@ THE SOFTWARE.
 #  endif
 #else
 #  define ICE_MATH_API ICE_MATH_EXTERNDEF static ICE_MATH_INLINEDEF
+#endif
+
+// Custom memory allocators
+#ifndef ICE_MATH_MALLOC
+#  define ICE_MATH_MALLOC(sz) malloc(sz)
+#endif
+#ifndef ICE_MATH_CALLOC
+#  define ICE_MATH_CALLOC(n, sz) calloc(n, sz)
+#endif
+#ifndef ICE_MATH_REALLOC
+#  define ICE_MATH_REALLOC(ptr, sz) realloc(ptr, sz)
+#endif
+#ifndef ICE_MATH_FREE
+#  define ICE_MATH_FREE(ptr) free(ptr)
 #endif
 
 #if defined(__cplusplus)
@@ -777,7 +791,6 @@ ICE_MATH_API  double         ICE_MATH_CALLCONV  ice_math_rand(void);
 // ice_math IMPLEMENTATION
 ///////////////////////////////////////////////////////////////////////////////////////////
 #if defined(ICE_MATH_IMPL)
-#include <stdlib.h>     // malloc and free
 #include <time.h>       // time(NULL), For random numbers seed
 
 ICE_MATH_API double ICE_MATH_CALLCONV ice_math_rad(double n) {
@@ -3153,7 +3166,7 @@ ICE_MATH_API ice_math_mat ICE_MATH_CALLCONV ice_math_mat_lookat(ice_math_vec3 ey
 // Vertices
 // WARNING: They allocate memory, Consider freeing vertices with ice_math_free_vertices() when program finishes!
 ICE_MATH_API double* ICE_MATH_CALLCONV ice_math_point2d_vertices(ice_math_vec2 v) {
-    double* arr = (double*) malloc(2 * sizeof(double));
+    double* arr = (double*) ICE_MATH_MALLOC(2 * sizeof(double));
     
     arr[0] = v.x;
     arr[1] = v.y;
@@ -3162,7 +3175,7 @@ ICE_MATH_API double* ICE_MATH_CALLCONV ice_math_point2d_vertices(ice_math_vec2 v
 }
 
 ICE_MATH_API double* ICE_MATH_CALLCONV ice_math_line2d_vertices(ice_math_vec2 v1, ice_math_vec2 v2) {
-    double* arr = (double*) malloc(4 * sizeof(double));
+    double* arr = (double*) ICE_MATH_MALLOC(4 * sizeof(double));
     arr[0] = v1.x;
     arr[1] = v1.y;
     arr[2] = v2.y;
@@ -3172,7 +3185,7 @@ ICE_MATH_API double* ICE_MATH_CALLCONV ice_math_line2d_vertices(ice_math_vec2 v1
 }
 
 ICE_MATH_API double* ICE_MATH_CALLCONV ice_math_rect2d_vertices(ice_math_rect r) {
-    double* arr = (double*) malloc(8 * sizeof(double));
+    double* arr = (double*) ICE_MATH_MALLOC(8 * sizeof(double));
     
     arr[0] = r.x;
     arr[1] = r.y;
@@ -3191,7 +3204,7 @@ ICE_MATH_API double* ICE_MATH_CALLCONV ice_math_circle2d_vertices(ice_math_vec2 
 }
 
 ICE_MATH_API double* ICE_MATH_CALLCONV ice_math_triangle2d_vertices(ice_math_vec2 v1, ice_math_vec2 v2, ice_math_vec2 v3) {
-    double* arr = (double*) malloc(6 * sizeof(double));
+    double* arr = (double*) ICE_MATH_MALLOC(6 * sizeof(double));
     
     arr[0] = v1.x;
     arr[1] = v1.y;
@@ -3204,7 +3217,7 @@ ICE_MATH_API double* ICE_MATH_CALLCONV ice_math_triangle2d_vertices(ice_math_vec
 }
 
 ICE_MATH_API double* ICE_MATH_CALLCONV ice_math_polygon2d_vertices(ice_math_vec2 v, double size, int sides) {
-    double* arr = (double*) malloc(sides + 2 * 2 * sizeof(double));
+    double* arr = (double*) ICE_MATH_MALLOC(sides + 2 * 2 * sizeof(double));
     
     arr[0] = v.x + size * ice_math_cos(0);
     arr[1] = v.y + size * ice_math_sin(0);
@@ -3218,7 +3231,7 @@ ICE_MATH_API double* ICE_MATH_CALLCONV ice_math_polygon2d_vertices(ice_math_vec2
 }
 
 ICE_MATH_API double* ICE_MATH_CALLCONV ice_math_tex2d_rect_vertices(ice_math_rect src, ice_math_rect dst, int width, int height) {
-    double* arr = (double*) malloc(12 * sizeof(double));
+    double* arr = (double*) ICE_MATH_MALLOC(12 * sizeof(double));
     
     // e: sx, o: sy, l: sw, t: sh
     // r: dx, n: dy, c: dw, g: dh
@@ -3248,7 +3261,7 @@ ICE_MATH_API double* ICE_MATH_CALLCONV ice_math_tex2d_rect_vertices(ice_math_rec
 }
 
 ICE_MATH_API double* ICE_MATH_CALLCONV ice_math_tex2d_tex_vertices(ice_math_rect src, ice_math_rect dst, int width, int height) {
-    double* arr = (double*) malloc(12 * sizeof(double));
+    double* arr = (double*) ICE_MATH_MALLOC(12 * sizeof(double));
     
     // e: sx, o: sy, l: sw, t: sh
     // r: dx, n: dy, c: dw, g: dh
@@ -3282,7 +3295,7 @@ ICE_MATH_API double* ICE_MATH_CALLCONV ice_math_cube_vertices(ice_math_vec3 v, d
 }
 
 ICE_MATH_API double* ICE_MATH_CALLCONV ice_math_cuboid_vertices(ice_math_vec3 v, ice_math_vec3 s) {
-    double* arr = (double*) malloc(72 * sizeof(double));
+    double* arr = (double*) ICE_MATH_MALLOC(72 * sizeof(double));
     
     arr[0] = v.x - s.x / 2;     arr[1] = v.y - s.y / 2;     arr[2] = v.z + s.z / 2;
     arr[3] = v.x + s.x / 2;     arr[4] = v.y - s.y / 2;     arr[5] = v.z + s.z / 2;
@@ -3316,7 +3329,7 @@ ICE_MATH_API double* ICE_MATH_CALLCONV ice_math_cuboid_vertices(ice_math_vec3 v,
 }
 
 ICE_MATH_API double* ICE_MATH_CALLCONV ice_math_sphere_vertices(ice_math_vec3 v, double s) {
-    double* arr = (double*) malloc((s * (s + 2)) * sizeof(double));
+    double* arr = (double*) ICE_MATH_MALLOC((s * (s + 2)) * sizeof(double));
     
     for (int i = 0; i < (s + 2); i++) {
         for (int j = 0; j < s; j++) {
@@ -3346,7 +3359,7 @@ ICE_MATH_API double* ICE_MATH_CALLCONV ice_math_sphere_vertices(ice_math_vec3 v,
 }
 
 ICE_MATH_API double* ICE_MATH_CALLCONV ice_math_point3d_vertices(ice_math_vec3 v) {
-    double* arr = (double*) malloc(3 * sizeof(double));
+    double* arr = (double*) ICE_MATH_MALLOC(3 * sizeof(double));
     
     arr[0] = v.x;
     arr[1] = v.y;
@@ -3356,7 +3369,7 @@ ICE_MATH_API double* ICE_MATH_CALLCONV ice_math_point3d_vertices(ice_math_vec3 v
 }
 
 ICE_MATH_API double* ICE_MATH_CALLCONV ice_math_line3d_vertices(ice_math_vec3 v1, ice_math_vec3 v2) {
-    double* arr = (double*) malloc(6 * sizeof(double));
+    double* arr = (double*) ICE_MATH_MALLOC(6 * sizeof(double));
     
     arr[0] = v1.x;
     arr[1] = v1.y;
@@ -3369,7 +3382,7 @@ ICE_MATH_API double* ICE_MATH_CALLCONV ice_math_line3d_vertices(ice_math_vec3 v1
 }
 
 ICE_MATH_API double* ICE_MATH_CALLCONV ice_math_rect3d_vertices(ice_math_rect r, double z) {
-    double* arr = (double*) malloc(12 * sizeof(double));
+    double* arr = (double*) ICE_MATH_MALLOC(12 * sizeof(double));
     
     arr[0] = r.x;
     arr[1] = r.y;
@@ -3392,7 +3405,7 @@ ICE_MATH_API double* ICE_MATH_CALLCONV ice_math_circle3d_vertices(ice_math_vec3 
 }
 
 ICE_MATH_API double* ICE_MATH_CALLCONV ice_math_triangle3d_vertices(ice_math_vec3 v1, ice_math_vec3 v2, ice_math_vec3 v3) {
-    double* arr = (double*) malloc(9 * sizeof(double));
+    double* arr = (double*) ICE_MATH_MALLOC(9 * sizeof(double));
     
     arr[0] = v1.x;
     arr[1] = v1.y;
@@ -3408,7 +3421,7 @@ ICE_MATH_API double* ICE_MATH_CALLCONV ice_math_triangle3d_vertices(ice_math_vec
 }
 
 ICE_MATH_API double* ICE_MATH_CALLCONV ice_math_polygon3d_vertices(ice_math_vec3 v, double size, int sides) {
-    double* arr = (double*) malloc((sides + 3) * 3 * sizeof(double));
+    double* arr = (double*) ICE_MATH_MALLOC((sides + 3) * 3 * sizeof(double));
     
     arr[0] = v.x + size * ice_math_cos(0);
     arr[1] = v.y + size * ice_math_sin(0);
@@ -3424,7 +3437,7 @@ ICE_MATH_API double* ICE_MATH_CALLCONV ice_math_polygon3d_vertices(ice_math_vec3
 }
 
 ICE_MATH_API double* ICE_MATH_CALLCONV ice_math_tex3d_rect_vertices(ice_math_rect src, ice_math_rect dst, double z, int width, int height) {
-    double* arr = (double*) malloc(18 * sizeof(double));
+    double* arr = (double*) ICE_MATH_MALLOC(18 * sizeof(double));
     
     // e: sx, o: sy, l: sw, t: sh
     // r: dx, n: dy, c: dw, g: dh
@@ -3460,7 +3473,7 @@ ICE_MATH_API double* ICE_MATH_CALLCONV ice_math_tex3d_rect_vertices(ice_math_rec
 }
 
 ICE_MATH_API double* ICE_MATH_CALLCONV ice_math_tex3d_tex_vertices(ice_math_rect src, ice_math_rect dst, double z, int width, int height) {
-    double* arr = (double*) malloc(18 * sizeof(double));
+    double* arr = (double*) ICE_MATH_MALLOC(18 * sizeof(double));
     
     // e: sx, o: sy, l: sw, t: sh
     // r: dx, n: dy, c: dw, g: dh
@@ -3496,7 +3509,7 @@ ICE_MATH_API double* ICE_MATH_CALLCONV ice_math_tex3d_tex_vertices(ice_math_rect
 }
 
 ICE_MATH_API void ICE_MATH_CALLCONV ice_math_free_vertices(double* vertices) {
-    free(vertices);
+    ICE_MATH_FREE(vertices);
 }
 
 // Distances

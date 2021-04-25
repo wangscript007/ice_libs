@@ -1,13 +1,12 @@
 // Written by Rabia Alhaffar in 9/April/2021
 // ice_time.h
 // Single-Header Cross-Platform C library for working with Time!
-// Updated: 23/April/2021
+// Updated: 25/April/2021
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // ice_time.h (FULL OVERVIEW)
 ///////////////////////////////////////////////////////////////////////////////////////////
 /*
-
 [1] BRIEF:
 ice_time is cross-platform single-header C library for working with Time!
 
@@ -356,8 +355,6 @@ ICE_TIME_API  double  ICE_TIME_CALLCONV  ice_time_century_to_decade(double centu
 ///////////////////////////////////////////////////////////////////////////////////////////
 #if defined(ICE_TIME_IMPL)
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <time.h>
 
 #if defined(ICE_TIME_MICROSOFT)
