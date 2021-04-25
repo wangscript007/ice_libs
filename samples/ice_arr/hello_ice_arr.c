@@ -1,5 +1,5 @@
-#include <stdio.h>
 #define ICE_ARR_IMPL
+#include <stdio.h>
 #include "ice_arr.h"
 
 int main(int argc, char** argv) {
