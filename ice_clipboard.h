@@ -217,6 +217,20 @@ THE SOFTWARE.
 #  endif
 #endif
 
+// Custom memory allocators
+#ifndef ICE_CLIPBOARD_MALLOC
+#  define ICE_CLIPBOARD_MALLOC(sz) malloc(sz)
+#endif
+#ifndef ICE_CLIPBOARD_CALLOC
+#  define ICE_CLIPBOARD_CALLOC(n, sz) calloc(n, sz)
+#endif
+#ifndef ICE_CLIPBOARD_REALLOC
+#  define ICE_CLIPBOARD_REALLOC(ptr, sz) realloc(ptr, sz)
+#endif
+#ifndef ICE_CLIPBOARD_FREE
+#  define ICE_CLIPBOARD_FREE(ptr) free(ptr)
+#endif
+
 #if defined(__cplusplus)
 extern "C" {
 #endif
@@ -635,6 +649,7 @@ ICE_CLIPBOARD_API ice_clipboard_bool ICE_CLIPBOARD_CALLCONV ice_clipboard_close(
 }
 
 #elif defined(ICE_CLIPBOARD_NULL)
+#include <stdlib.h>
 
 FILE* ice_clipboard_data;
 
@@ -652,12 +667,12 @@ ICE_CLIPBOARD_API char* ICE_CLIPBOARD_CALLCONV ice_clipboard_get(void) {
     int ch;
     int nch = 0;
     int size = 64;
-    char *buf = malloc(size);
+    char *buf = ICE_CLIPBOARD_MALLOC(size);
     
     while ((c = fgetc(ice_clipboard_data)) != EOF) {
         if (nch >= size - 1) {
             size += 64;
-            buf = realloc(buf, size);
+            buf = ICE_CLIPBOARD_REALLOC(buf, size);
          
             if (buf == NULL) {
                return NULL;

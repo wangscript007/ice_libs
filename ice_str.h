@@ -176,6 +176,20 @@ THE SOFTWARE.
 #  define ICE_STR_API ICE_STR_EXTERNDEF static ICE_STR_INLINEDEF
 #endif
 
+// Custom memory allocators
+#ifndef ICE_STR_MALLOC
+#  define ICE_STR_MALLOC(sz) malloc(sz)
+#endif
+#ifndef ICE_STR_CALLOC
+#  define ICE_STR_CALLOC(n, sz) calloc(n, sz)
+#endif
+#ifndef ICE_STR_REALLOC
+#  define ICE_STR_REALLOC(ptr, sz) realloc(ptr, sz)
+#endif
+#ifndef ICE_STR_FREE
+#  define ICE_STR_FREE(ptr) free(ptr)
+#endif
+
 #if defined(__cplusplus)
 extern "C" {
 #endif
@@ -236,7 +250,7 @@ ICE_STR_API int ICE_STR_CALLCONV ice_str_arr_len(char** arr) {
 }
 
 ICE_STR_API char* ICE_STR_CALLCONV ice_str_sub(char* str, int from, int to) {
-    char* res = (char*) malloc((to - from) + 1 * sizeof(char));
+    char* res = (char*) ICE_STR_MALLOC((to - from) + 1 * sizeof(char));
     int count = 0;
 
     for (int i = from; i <= to; i++) {
@@ -250,7 +264,7 @@ ICE_STR_API char* ICE_STR_CALLCONV ice_str_sub(char* str, int from, int to) {
 
 ICE_STR_API char* ICE_STR_CALLCONV ice_str_strdup(char* str) {
     int len = ice_str_len(str);
-    char* res = (char*) malloc(len + 1 * sizeof(char));
+    char* res = (char*) ICE_STR_MALLOC(len + 1 * sizeof(char));
 
     for (int i = 0; i < len; i++) {
         res[i] = str[i];
@@ -264,7 +278,7 @@ ICE_STR_API char* ICE_STR_CALLCONV ice_str_concat(char* s1, char* s2) {
     int len_str1 = ice_str_len(s1);
     int len_str2 = ice_str_len(s2);
 
-    char* res = (char*) malloc((len_str1 + len_str2) * sizeof(char));
+    char* res = (char*) ICE_STR_MALLOC((len_str1 + len_str2) * sizeof(char));
     for (int i = 0; i < len_str1; i++) {
         res[i] = s1[i];
     }
@@ -279,7 +293,7 @@ ICE_STR_API char* ICE_STR_CALLCONV ice_str_concat(char* s1, char* s2) {
 
 ICE_STR_API char* ICE_STR_CALLCONV ice_str_rep(char* str, int count) {
     int lenstr = ice_str_len(str);
-    char* res = (char*)malloc((lenstr * count) + 1 * sizeof(char));
+    char* res = (char*) ICE_STR_MALLOC((lenstr * count) + 1 * sizeof(char));
     int times = 0;
 
     for (int i = 0; i < count; i++) {
@@ -295,7 +309,7 @@ ICE_STR_API char* ICE_STR_CALLCONV ice_str_rep(char* str, int count) {
 }
 
 ICE_STR_API char* ICE_STR_CALLCONV ice_str_char(char* str, int index) {
-    char* c = (char*) malloc(2 * sizeof(char));
+    char* c = (char*) ICE_STR_MALLOC(2 * sizeof(char));
     c[0] = str[index];
     c[1] = '\0';
     return c;
@@ -321,7 +335,7 @@ ICE_STR_API ice_str_bool ICE_STR_CALLCONV ice_str_match(char* s1, char* s2) {
 
 ICE_STR_API char* ICE_STR_CALLCONV ice_str_upper(char* str) {
     int lenstr = ice_str_len(str);
-    char* res = (char*)malloc(lenstr + 1 * sizeof(char));
+    char* res = (char*) ICE_STR_MALLOC(lenstr + 1 * sizeof(char));
 
     for (int i = 0; i < lenstr; i++) {
         if (str[i] == 'a') res[i] = 'A';
@@ -359,7 +373,7 @@ ICE_STR_API char* ICE_STR_CALLCONV ice_str_upper(char* str) {
 
 ICE_STR_API char* ICE_STR_CALLCONV ice_str_lower(char* str) {
     int lenstr = ice_str_len(str);
-    char* res = (char*)malloc(lenstr + 1 * sizeof(char));
+    char* res = (char*) ICE_STR_MALLOC(lenstr + 1 * sizeof(char));
 
     for (int i = 0; i < lenstr; i++) {
         if (str[i] == 'A') res[i] = 'a';
@@ -397,7 +411,7 @@ ICE_STR_API char* ICE_STR_CALLCONV ice_str_lower(char* str) {
 
 ICE_STR_API char* ICE_STR_CALLCONV ice_str_capitalize(char* str) {
     int lenstr = ice_str_len(str);
-    char* res = (char*)malloc(lenstr + 1 * sizeof(char));
+    char* res = (char*) ICE_STR_MALLOC(lenstr + 1 * sizeof(char));
 
     if (str[0] == 'a') res[0] = 'A';
     else if (str[0] == 'b') res[0] = 'B';
@@ -453,7 +467,7 @@ ICE_STR_API char** ICE_STR_CALLCONV ice_str_split(char* str, char delim) {
         arrlen++;
     }
 
-    int* arr_elem_lengths = (int*)malloc(arrlen * sizeof(int));
+    int* arr_elem_lengths = (int*) ICE_STR_MALLOC(arrlen * sizeof(int));
 
     for (int i = 0; i < lenstr; i++) {
         count++;
@@ -475,7 +489,7 @@ ICE_STR_API char** ICE_STR_CALLCONV ice_str_split(char* str, char delim) {
         sum += arr_elem_lengths[i];
     }
 
-    char** res = (char**)malloc(sum * sizeof(char));
+    char** res = (char**) ICE_STR_MALLOC(sum * sizeof(char));
 
     for (int i = 0; i < elems; i++) {
         if (i == 0) {
@@ -502,7 +516,7 @@ ICE_STR_API char* ICE_STR_CALLCONV ice_str_join(char** strs) {
         strs_size += ice_str_len(strs[i]);
     }
 
-    char* res = (char*)malloc(strs_size + 1 * sizeof(char));
+    char* res = (char*) ICE_STR_MALLOC(strs_size + 1 * sizeof(char));
     int res_s = 0;
 
     for (int i = 0; i < arrlen; i++) {
@@ -531,7 +545,7 @@ ICE_STR_API char* ICE_STR_CALLCONV ice_str_join_with_delim(char** strs, char del
         strs_size += ice_str_len(strs[i]);
     }
 
-    char* res = (char*)malloc(1 + strs_size + arrlen * sizeof(char));
+    char* res = (char*) ICE_STR_MALLOC(1 + strs_size + arrlen * sizeof(char));
 
     for (int i = 0; i < arrlen; i++) {
         int lstr = ice_str_len(strs[i]);
@@ -574,7 +588,7 @@ ICE_STR_API ice_str_bool ICE_STR_CALLCONV ice_str_end_char(char* str, char ch) {
 
 ICE_STR_API char* ICE_STR_CALLCONV ice_str_rev(char* str) {
     int lenstr = ice_str_len(str);
-    char* res = (char*)malloc(lenstr * sizeof(char));
+    char* res = (char*) ICE_STR_MALLOC(lenstr * sizeof(char));
 
     for (int i = 0; i < lenstr; i++) {
         res[(lenstr - 1) - i] = str[i];
@@ -585,15 +599,17 @@ ICE_STR_API char* ICE_STR_CALLCONV ice_str_rev(char* str) {
 }
 
 ICE_STR_API void ICE_STR_CALLCONV ice_str_free(char* str) {
-    free(str);
+    ICE_STR_FREE(str);
 }
 
 ICE_STR_API void ICE_STR_CALLCONV ice_str_arr_free(char** arr) {
+    /*
     for (int i = 0; i < ice_str_arr_len(arr); i++) {
-        free(arr[i]);
+        ICE_STR_FREE(arr[i]);
     }
+    */
     
-    free(arr);
+    ICE_STR_FREE(arr);
 }
 
 #endif  // ICE_STR_IMPL

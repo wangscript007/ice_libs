@@ -185,6 +185,20 @@ THE SOFTWARE.
 #  define ICE_FS_API ICE_FS_EXTERNDEF static ICE_FS_INLINEDEF
 #endif
 
+// Custom memory allocators
+#ifndef ICE_FS_MALLOC
+#  define ICE_FS_MALLOC(sz) malloc(sz)
+#endif
+#ifndef ICE_FS_CALLOC
+#  define ICE_FS_CALLOC(n, sz) calloc(n, sz)
+#endif
+#ifndef ICE_FS_REALLOC
+#  define ICE_FS_REALLOC(ptr, sz) realloc(ptr, sz)
+#endif
+#ifndef ICE_FS_FREE
+#  define ICE_FS_FREE(ptr) free(ptr)
+#endif
+
 #if defined(__cplusplus)
 extern "C" {
 #endif
@@ -1365,7 +1379,7 @@ ICE_FS_API char* ICE_FS_CALLCONV ice_fs_root(char* f) {
     size_t reqsize;
 
     getenv_s(&reqsize, NULL, 0, "SystemDrive");
-    var = (char*) malloc(reqsize * sizeof(char));
+    var = (char*) ICE_FS_MALLOC(reqsize * sizeof(char));
     getenv_s(&reqsize, var, reqsize, "SystemDrive");
     
     return var;
@@ -1462,7 +1476,7 @@ ICE_FS_API ice_fs_bool ICE_FS_CALLCONV ice_fs_rename_dir(char* d1, char* d2) {
 
 ICE_FS_API char* ICE_FS_CALLCONV ice_fs_dir(char* dir) {
     size_t lenstr = strlen(dir);
-    char* res = (char*) malloc(lenstr * sizeof(char));
+    char* res = (char*) ICE_FS_MALLOC(lenstr * sizeof(char));
     
     for (int i = 0; i < lenstr; i++) {
         if (dir[i] == '\\' || dir[i] == '/') {
@@ -1484,7 +1498,7 @@ ICE_FS_API char* ICE_FS_CALLCONV ice_fs_dir(char* dir) {
 ICE_FS_API char* ICE_FS_CALLCONV ice_fs_join_dir(char* d1, char* d2) {
     size_t lenstr1 = strlen(d1);
     size_t lenstr2 = strlen(d2);
-    char* res = (char*) malloc((lenstr1 + lenstr2 + 2) * sizeof(char));
+    char* res = (char*) ICE_FS_MALLOC((lenstr1 + lenstr2 + 2) * sizeof(char));
     
     for (int i = 0; i < lenstr1; i++) {
         res[i] = d1[i];
@@ -1519,7 +1533,7 @@ ICE_FS_API char* ICE_FS_CALLCONV ice_fs_join_dirs(char** dirs) {
         }
     }
     
-    char* res = (char*) malloc((dirs_size + (dirs_count * 2)) * sizeof(char));
+    char* res = (char*) ICE_FS_MALLOC((dirs_size + (dirs_count * 2)) * sizeof(char));
     
     for (int i = 0; i < dirs_count; i++) {
         strcpy(res, dirs[i]);
@@ -1551,7 +1565,7 @@ ICE_FS_API char** ICE_FS_CALLCONV ice_fs_split_dir(char* dir, char delim) {
        }
     }
     
-    int* arr_elem_lengths = (int*) calloc(arrlen, sizeof(int));
+    int* arr_elem_lengths = (int*) ICE_FS_CALLOC(arrlen, sizeof(int));
     
     for (int i = 0; i < lenstr; i++) {
        count++;
@@ -1568,11 +1582,11 @@ ICE_FS_API char** ICE_FS_CALLCONV ice_fs_split_dir(char* dir, char delim) {
         sum += arr_elem_lengths[i];
     }
     
-    char** res = (char**) calloc(sum, sizeof(char));
+    char** res = (char**) ICE_FS_CALLOC(sum, sizeof(char));
     
     for (int i = 0; i < elems; i++) {
         if (i == 0) {
-            res[i] = (char*) calloc((arr_elem_lengths[i] - 2) + 1, sizeof(char));
+            res[i] = (char*) ICE_FS_CALLOC((arr_elem_lengths[i] - 2) + 1, sizeof(char));
             int count = 0;
     
             for (int i = 0; i <= arr_elem_lengths[i] - 2; i++) {
@@ -1582,7 +1596,7 @@ ICE_FS_API char** ICE_FS_CALLCONV ice_fs_split_dir(char* dir, char delim) {
     
             res[count + 1] = '\0';
         } else {
-            res[i] = (char*) calloc(((arr_elem_lengths[i] - 2) - arr_elem_lengths[i - 1]) + 1, sizeof(char));
+            res[i] = (char*) ICE_FS_CALLOC(((arr_elem_lengths[i] - 2) - arr_elem_lengths[i - 1]) + 1, sizeof(char));
             int count = 0;
     
             for (int i = arr_elem_lengths[i - 1]; i <= arr_elem_lengths[i] - 2; i++) {
@@ -1594,7 +1608,7 @@ ICE_FS_API char** ICE_FS_CALLCONV ice_fs_split_dir(char* dir, char delim) {
         }
     }
     
-    free(arr_elem_lengths);
+    ICE_FS_FREE(arr_elem_lengths);
     return res;
 }
 
@@ -1833,7 +1847,7 @@ ICE_FS_API char** ICE_FS_CALLCONV ice_fs_lines(char* fname) {
         arrsize += strlen(ice_fs_get_line(fname, i));
     }
     
-    char** lines = (char**) malloc(arrsize * sizeof(char));
+    char** lines = (char**) ICE_FS_MALLOC(arrsize * sizeof(char));
     
     for (int i = 0; i < count; i++) {
         lines[i] = ice_fs_get_line(fname, i);
@@ -1864,7 +1878,7 @@ ICE_FS_API char* ICE_FS_CALLCONV ice_fs_file_content(char* fname) {
     fseek(f, 0, SEEK_END);
     long fsize = ftell(f);
     fseek(f, 0, SEEK_SET);
-    char *string = (char*) malloc(fsize + 1);
+    char *string = (char*) ICE_FS_MALLOC(fsize + 1);
     fread(string, 1, fsize, f);
     fclose(f);
     

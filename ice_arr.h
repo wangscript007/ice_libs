@@ -182,6 +182,20 @@ THE SOFTWARE.
 #  define ICE_ARR_API ICE_ARR_EXTERNDEF static ICE_ARR_INLINEDEF
 #endif
 
+// Custom memory allocators
+#ifndef ICE_ARR_MALLOC
+#  define ICE_ARR_MALLOC(sz) malloc(sz)
+#endif
+#ifndef ICE_ARR_CALLOC
+#  define ICE_ARR_CALLOC(n, sz) calloc(n, sz)
+#endif
+#ifndef ICE_ARR_REALLOC
+#  define ICE_ARR_REALLOC(ptr, sz) realloc(ptr, sz)
+#endif
+#ifndef ICE_ARR_FREE
+#  define ICE_ARR_FREE(ptr) free(ptr)
+#endif
+
 #if defined(__cplusplus)
 extern "C" {
 #endif
@@ -259,7 +273,7 @@ ICE_ARR_API  void           ICE_ARR_CALLCONV  ice_arr_sort_ex(ice_arr_array* arr
 
 ICE_ARR_API ice_arr_array ICE_ARR_CALLCONV ice_arr_new(int len) {
     ice_arr_array res = (ice_arr_array) {
-        (double*) calloc(len + (len / 2), sizeof(double)),
+        (double*) ICE_ARR_CALLOC(len + (len / 2), sizeof(double)),
         len,
         len + (len / 2),
     };
@@ -306,7 +320,7 @@ ICE_ARR_API void ICE_ARR_CALLCONV ice_arr_push(ice_arr_array* arr, double val) {
     if (arr->len++ < arr->real_len) {
         arr->arr[arr->len - 1] = val;
     } else {
-        realloc(arr->arr, (arr->real_len + (arr->real_len / 2)) * sizeof(double));
+        ICE_ARR_REALLOC(arr->arr, (arr->real_len + (arr->real_len / 2)) * sizeof(double));
         arr->arr[arr->len - 1] = val;
         arr->real_len += (arr->real_len / 2);
     }
@@ -325,7 +339,7 @@ ICE_ARR_API void ICE_ARR_CALLCONV ice_arr_rev(ice_arr_array* arr) {
 }
 
 ICE_ARR_API void ICE_ARR_CALLCONV ice_arr_free(ice_arr_array arr) {
-    free(arr.arr);
+    ICE_ARR_FREE(arr.arr);
 }
 
 ICE_ARR_API void ICE_ARR_CALLCONV ice_arr_fill(ice_arr_array* arr, double val) {
@@ -713,11 +727,11 @@ ICE_ARR_API void ICE_ARR_CALLCONV ice_arr_rotate(ice_arr_array* arr, int times) 
 
 ICE_ARR_API void ICE_ARR_CALLCONV ice_arr_move(ice_arr_array* a1, int from_index, int elems_count, int to_index, ice_arr_array* a2) {
     if (a1->len + elems_count - 1 >= a1->real_len) {
-        realloc(a1->arr, (a1->real_len + ((a1->len + elems_count - 1) - a1->real_len / 2)));
+        ICE_ARR_REALLOC(a1->arr, (a1->real_len + ((a1->len + elems_count - 1) - a1->real_len / 2)));
     }
     
     if (a2->len + elems_count - 1 >= a2->real_len) {
-        realloc(a2->arr, (a2->real_len + ((a2->len + elems_count - 1) - a2->real_len / 2)));
+        ICE_ARR_REALLOC(a2->arr, (a2->real_len + ((a2->len + elems_count - 1) - a2->real_len / 2)));
     }
     
     for (int i = 0; i < (elems_count - 1); i++) {
