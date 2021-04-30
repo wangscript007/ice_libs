@@ -36,6 +36,8 @@ ice_libs is collection of Single-Header C libraries, Designed to introduce stuff
 | [ice_arr.h](https://github.com/Rabios/ice_libs/raw/master/ice_arr.h)                  | Cross-Platform Single-Header for working with numeric arrays     | Anywhere                                                                                                                          | C             | 773           |
 | [ice_battery.h](https://github.com/Rabios/ice_libs/raw/master/ice_battery.h)          | Cross-Platform Single-Header for getting battery info            | Microsoft platforms, Unix-based platforms, Web (Emscripten), Nintendo Switch, Sony PlayStation Portable, Sony PlayStation Vita    | C             | 996           |
 
+> More libs upcoming, Get prepared for!
+
 > NOTE: Unix-based platforms means Linux, iOS, OSX, Haiku, BeOS, and Android.
 
 > For docs of ice_libs see [here!](https://github.com/Rabios/ice_libs/blob/master/docs/README.md)
