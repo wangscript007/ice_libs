@@ -1,7 +1,7 @@
 // Written by Rabia Alhaffar in 20/April/2021
 // ice_test.h
 // Single-Header Cross-Platform tiny C library for unit testing!
-// Updated: 23/April/2021
+// Updated: 7/May/2021
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // ice_test.h (FULL OVERVIEW)
@@ -123,8 +123,8 @@ THE SOFTWARE.
     int lenstr2 = 0;\
     int matches = 0;\
     \
-    while (a[lenstr1] != NULL) lenstr1++;\
-    while (b[lenstr2] != NULL) lenstr2++;\
+    while (a[lenstr1] != '\0') lenstr1++;\
+    while (b[lenstr2] != '\0') lenstr2++;\
     \
     if (lenstr1 == lenstr2) {\
         for (int i = 0; i < lenstr1; i++) {\
