@@ -12,3 +12,4 @@
 - [ice_fs.h Documentation](ice_fs_api.md)
 - [ice_str.h Documentation](ice_str_api.md)
 - [ice_arr.h Documentation](ice_arr_api.md)
+- [ice_cpu.h Documentation](ice_cpu_api.md)
