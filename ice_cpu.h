@@ -315,7 +315,7 @@ ICE_CPU_API char* ICE_CPU_CALLCONV ice_cpu_name(void) {
 
 // Returns count of CPU cores device has as unsigned integer.
 ICE_CPU_API unsigned int ICE_CPU_CALLCONV ice_cpu_cores_count(void) {
-    return EM_ASM_INT({
+    return (unsigned int) EM_ASM_INT({
         return (window.navigator.hardwareConcurrency || 0);
     });
 }
