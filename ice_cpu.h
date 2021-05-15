@@ -434,7 +434,7 @@ ICE_CPU_API unsigned int ICE_CPU_CALLCONV ice_cpu_cores_count(void) {
 
 #elif defined(ICE_CPU_UNIX)
 ///////////////////////////////////////////////////////////////////////////////////////////
-// ICE_FFI_UNIX IMPLEMENTATION     (Android, Linux, BSD, etc...)
+// ICE_CPU_UNIX IMPLEMENTATION     (Android, Linux, BSD, etc...)
 ///////////////////////////////////////////////////////////////////////////////////////////#include <unistd.h>
 
 // Returns count of CPU cores device has as unsigned integer.
