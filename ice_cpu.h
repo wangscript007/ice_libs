@@ -267,6 +267,8 @@ typedef enum {
 ///////////////////////////////////////////////////////////////////////////////////////////
 ICE_CPU_API  unsigned int    ICE_CPU_CALLCONV  ice_cpu_cores_count(void);                // Returns count of CPU cores device has as unsigned integer.
 ICE_CPU_API  ice_cpu_arch    ICE_CPU_CALLCONV  ice_cpu_get_arch(void);                   // Returns CPU architecture.
+ICE_CPU_API  char*           ICE_CPU_CALLCONV  ice_cpu_name(void);                       // Returns CPU name used by device as string.
+
 
 #if defined(__cplusplus)
 }
@@ -283,6 +285,8 @@ ICE_CPU_API  ice_cpu_arch    ICE_CPU_CALLCONV  ice_cpu_get_arch(void);          
 ///////////////////////////////////////////////////////////////////////////////////////////
 #include <mach/mach.h>
 #include <mach/mach_host.h>
+#include <sys/types.h>
+#include <sys/sysctl.h>
 
 // Returns count of CPU cores device has as unsigned integer.
 ICE_CPU_API unsigned int ICE_CPU_CALLCONV ice_cpu_cores_count(void) {
@@ -293,6 +297,14 @@ ICE_CPU_API unsigned int ICE_CPU_CALLCONV ice_cpu_cores_count(void) {
     host_info(mach_host_self(), HOST_BASIC_INFO, (host_info_t)&info, &info_count);
 
     return (unsigned int)(info.max_cpus);
+}
+
+// Returns CPU name used by device as string.
+ICE_CPU_API char* ICE_CPU_CALLCONV ice_cpu_name(void) {
+    char buf[128];
+    size_t buflen = 128;
+    sysctlbyname("machdep.cpu.brand_string", &buf, &buflen, NULL, 0);
+    return buf;
 }
 
 #elif defined(ICE_CPU_WEB)
@@ -309,19 +321,83 @@ ICE_CPU_API unsigned int ICE_CPU_CALLCONV ice_cpu_cores_count(void) {
     });
 }
 
+// Returns CPU name used by device as string.
+ICE_CPU_API char* ICE_CPU_CALLCONV ice_cpu_name(void) {
+    return "[undefined]";
+}
+
 #elif defined(ICE_CPU_MICROSOFT)
 ///////////////////////////////////////////////////////////////////////////////////////////
 // ICE_CPU_MICROSOFT IMPLEMENTATION    (Microsoft platforms)
 ///////////////////////////////////////////////////////////////////////////////////////////
 #include <windows.h>
 
+#if (_MSC_VER)
+#  include <intrin.h>
+#else
+#  include <cpuid.h>
+#endif
+
+#include <string.h>
+
 SYSTEM_INFO sysinfo;
+char CPUBrandString[0x40];
 
 // Returns count of CPU cores device has as unsigned integer.
 ICE_CPU_API unsigned int ICE_CPU_CALLCONV ice_cpu_cores_count(void) {
     GetSystemInfo(&sysinfo);
     return sysinfo.dwNumberOfProcessors;
 }
+
+#if (_MSC_VER)
+// Returns CPU name used by device as string.
+ICE_CPU_API char* ICE_CPU_CALLCONV ice_cpu_name(void) {
+    int CPUInfo[4] = {-1};
+    __cpuid(CPUInfo, 0x80000000);
+    unsigned int nExIds = CPUInfo[0];
+
+    memset(CPUBrandString, 0, sizeof(CPUBrandString));
+    
+    for (int i = 0x80000000; i <= nExIds; ++i) {
+        __cpuid(CPUInfo, i);
+        
+        if  (i == 0x80000002) {
+			memcpy(CPUBrandString, CPUInfo, sizeof(CPUInfo));
+        } else if  (i == 0x80000003) {
+            memcpy(CPUBrandString + 16, CPUInfo, sizeof(CPUInfo));
+        } else if  (i == 0x80000004) {
+            memcpy(CPUBrandString + 32, CPUInfo, sizeof(CPUInfo));
+        }
+    }
+    
+    return CPUBrandString;
+}
+
+#else
+// Returns CPU name used by device as string.
+ICE_CPU_API char* ICE_CPU_CALLCONV ice_cpu_name(void) {
+    
+    unsigned int CPUInfo[4] = {0,0,0,0};
+    __cpuid(0x80000000, CPUInfo[0], CPUInfo[1], CPUInfo[2], CPUInfo[3]);
+    unsigned int nExIds = CPUInfo[0];
+    memset(CPUBrandString, 0, sizeof(CPUBrandString));
+    
+    for (unsigned int i = 0x80000000; i <= nExIds; ++i) {
+        __cpuid(i, CPUInfo[0], CPUInfo[1], CPUInfo[2], CPUInfo[3]);
+
+        if (i == 0x80000002) {
+            memcpy(CPUBrandString, CPUInfo, sizeof(CPUInfo));
+        } else if (i == 0x80000003) {
+            memcpy(CPUBrandString + 16, CPUInfo, sizeof(CPUInfo));
+        } else if (i == 0x80000004) {
+            memcpy(CPUBrandString + 32, CPUInfo, sizeof(CPUInfo));
+        }
+    }
+    
+    return CPUBrandString;
+}
+
+#endif
 
 #elif defined(ICE_CPU_3DS)
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -331,6 +407,11 @@ ICE_CPU_API unsigned int ICE_CPU_CALLCONV ice_cpu_cores_count(void) {
 // Returns count of CPU cores device has as unsigned integer.
 ICE_CPU_API unsigned int ICE_CPU_CALLCONV ice_cpu_cores_count(void) {
     return 2;
+}
+
+// Returns CPU name used by device as string.
+ICE_CPU_API char* ICE_CPU_CALLCONV ice_cpu_name(void) {
+    return "Dual-core ARM11 MPCore @ 268 MHz";
 }
 
 #elif defined(ICE_CPU_SWITCH)
@@ -343,6 +424,11 @@ ICE_CPU_API unsigned int ICE_CPU_CALLCONV ice_cpu_cores_count(void) {
     return 4;
 }
 
+// Returns CPU name used by device as string.
+ICE_CPU_API char* ICE_CPU_CALLCONV ice_cpu_name(void) {
+    return "Quad-core ARM Cortex-A57 @ 1.02 GHz"; // To comply with latest Nintendo updates.
+}
+
 #elif defined(ICE_CPU_GAMECUBE)
 ///////////////////////////////////////////////////////////////////////////////////////////
 // ICE_CPU_GAMECUBE IMPLEMENTATION    (Nintendo GameCube)
@@ -351,6 +437,11 @@ ICE_CPU_API unsigned int ICE_CPU_CALLCONV ice_cpu_cores_count(void) {
 // Returns count of CPU cores device has as unsigned integer.
 ICE_CPU_API unsigned int ICE_CPU_CALLCONV ice_cpu_cores_count(void) {
     return 1;
+}
+
+// Returns CPU name used by device as string.
+ICE_CPU_API char* ICE_CPU_CALLCONV ice_cpu_name(void) {
+    return "IBM PowerPC 750CXe Gekko @ 485 MHz";
 }
 
 #elif defined(ICE_CPU_WII)
@@ -363,6 +454,11 @@ ICE_CPU_API unsigned int ICE_CPU_CALLCONV ice_cpu_cores_count(void) {
     return 3;
 }
 
+// Returns CPU name used by device as string.
+ICE_CPU_API char* ICE_CPU_CALLCONV ice_cpu_name(void) {
+    return "IBM PowerPC Broadway @ 729 MHz";
+}
+
 #elif defined(ICE_CPU_PS1)
 ///////////////////////////////////////////////////////////////////////////////////////////
 // ICE_CPU_PS1 IMPLEMENTATION    (Sony PlayStation 1)
@@ -371,6 +467,11 @@ ICE_CPU_API unsigned int ICE_CPU_CALLCONV ice_cpu_cores_count(void) {
 // Returns count of CPU cores device has as unsigned integer.
 ICE_CPU_API unsigned int ICE_CPU_CALLCONV ice_cpu_cores_count(void) {
     return 1;
+}
+
+// Returns CPU name used by device as string.
+ICE_CPU_API char* ICE_CPU_CALLCONV ice_cpu_name(void) {
+    return "MIPS R3000A @ 33.8688 MHz";
 }
 
 #elif defined(ICE_CPU_PS2)
@@ -383,6 +484,11 @@ ICE_CPU_API unsigned int ICE_CPU_CALLCONV ice_cpu_cores_count(void) {
     return 1;
 }
 
+// Returns CPU name used by device as string.
+ICE_CPU_API char* ICE_CPU_CALLCONV ice_cpu_name(void) {
+    return "MIPS R5900 @ 294 MHz";
+}
+
 #elif defined(ICE_CPU_PS3)
 ///////////////////////////////////////////////////////////////////////////////////////////
 // ICE_CPU_PS3 IMPLEMENTATION    (Sony PlayStation 3)
@@ -391,6 +497,12 @@ ICE_CPU_API unsigned int ICE_CPU_CALLCONV ice_cpu_cores_count(void) {
 // Returns count of CPU cores device has as unsigned integer.
 ICE_CPU_API unsigned int ICE_CPU_CALLCONV ice_cpu_cores_count(void) {
     return 2;
+}
+
+// Returns CPU name used by device as string.
+ICE_CPU_API char* ICE_CPU_CALLCONV ice_cpu_name(void) {
+    return "PLAYSTATION 3 (R) CELL-BROADBAND CPU @ 3.2 GHz";
+}
 
 #elif defined(ICE_CPU_PS4)
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -400,6 +512,11 @@ ICE_CPU_API unsigned int ICE_CPU_CALLCONV ice_cpu_cores_count(void) {
 // Returns count of CPU cores device has as unsigned integer.
 ICE_CPU_API unsigned int ICE_CPU_CALLCONV ice_cpu_cores_count(void) {
     return 4;
+}
+
+// Returns CPU name used by device as string.
+ICE_CPU_API char* ICE_CPU_CALLCONV ice_cpu_name(void) {
+    return "AMD x86-64 Jaguar @ 1.6 GHz";
 }
 
 #elif defined(ICE_CPU_PS5)
@@ -412,6 +529,11 @@ ICE_CPU_API unsigned int ICE_CPU_CALLCONV ice_cpu_cores_count(void) {
     return 8;
 }
 
+// Returns CPU name used by device as string.
+ICE_CPU_API char* ICE_CPU_CALLCONV ice_cpu_name(void) {
+    return "AMD Zen 2 @ 3.5 GHz";
+}
+
 #elif defined(ICE_CPU_PSP)
 ///////////////////////////////////////////////////////////////////////////////////////////
 // ICE_CPU_PSP IMPLEMENTATION    (Sony PlayStation Portable)
@@ -420,6 +542,11 @@ ICE_CPU_API unsigned int ICE_CPU_CALLCONV ice_cpu_cores_count(void) {
 // Returns count of CPU cores device has as unsigned integer.
 ICE_CPU_API unsigned int ICE_CPU_CALLCONV ice_cpu_cores_count(void) {
     return 2;
+}
+
+// Returns CPU name used by device as string.
+ICE_CPU_API char* ICE_CPU_CALLCONV ice_cpu_name(void) {
+    return "MIPS R4000 @ 222 MHz";
 }
 
 #elif defined(ICE_CPU_PSVITA)
@@ -432,14 +559,44 @@ ICE_CPU_API unsigned int ICE_CPU_CALLCONV ice_cpu_cores_count(void) {
     return 4;
 }
 
+// Returns CPU name used by device as string.
+ICE_CPU_API char* ICE_CPU_CALLCONV ice_cpu_name(void) {
+    return "ARM® Cortex™-A9 @ 333 MHz";
+}
+
 #elif defined(ICE_CPU_UNIX)
 ///////////////////////////////////////////////////////////////////////////////////////////
 // ICE_CPU_UNIX IMPLEMENTATION     (Android, Linux, BSD, etc...)
 ///////////////////////////////////////////////////////////////////////////////////////////#include <unistd.h>
+#include <cpuid.h>
+#include <string.h>
 
 // Returns count of CPU cores device has as unsigned integer.
 ICE_CPU_API unsigned int ICE_CPU_CALLCONV ice_cpu_cores_count(void) {
     return sysconf(_SC_NPROCESSORS_ONLN);
+}
+
+// Returns CPU name used by device as string.
+ICE_CPU_API char* ICE_CPU_CALLCONV ice_cpu_name(void) {
+    char CPUBrandString[0x40];
+    unsigned int CPUInfo[4] = {0,0,0,0};
+    __cpuid(0x80000000, CPUInfo[0], CPUInfo[1], CPUInfo[2], CPUInfo[3]);
+    unsigned int nExIds = CPUInfo[0];
+    memset(CPUBrandString, 0, sizeof(CPUBrandString));
+    
+    for (unsigned int i = 0x80000000; i <= nExIds; ++i) {
+        __cpuid(i, CPUInfo[0], CPUInfo[1], CPUInfo[2], CPUInfo[3]);
+
+        if (i == 0x80000002) {
+            memcpy(CPUBrandString, CPUInfo, sizeof(CPUInfo));
+        } else if (i == 0x80000003) {
+            memcpy(CPUBrandString + 16, CPUInfo, sizeof(CPUInfo));
+        } else if (i == 0x80000004) {
+            memcpy(CPUBrandString + 32, CPUInfo, sizeof(CPUInfo));
+        }
+    }
+    
+    return CPUBrandString;
 }
 
 #elif defined(ICE_CPU_HPUX)
@@ -447,10 +604,34 @@ ICE_CPU_API unsigned int ICE_CPU_CALLCONV ice_cpu_cores_count(void) {
 // ICE_CPU_HPUX IMPLEMENTATION    (HP-UX)
 ///////////////////////////////////////////////////////////////////////////////////////////
 #include <sys/mpctl.h>
+#include <string.h>
 
 // Returns count of CPU cores device has as unsigned integer.
 ICE_CPU_API unsigned int ICE_CPU_CALLCONV ice_cpu_cores_count(void) {
     return mpctl(MPC_GETNUMSPUS, NULL, NULL);
+}
+
+// Returns CPU name used by device as string.
+ICE_CPU_API char* ICE_CPU_CALLCONV ice_cpu_name(void) {
+    char CPUBrandString[0x40];
+    unsigned int CPUInfo[4] = {0,0,0,0};
+    __cpuid(0x80000000, CPUInfo[0], CPUInfo[1], CPUInfo[2], CPUInfo[3]);
+    unsigned int nExIds = CPUInfo[0];
+    memset(CPUBrandString, 0, sizeof(CPUBrandString));
+    
+    for (unsigned int i = 0x80000000; i <= nExIds; ++i) {
+        __cpuid(i, CPUInfo[0], CPUInfo[1], CPUInfo[2], CPUInfo[3]);
+
+        if (i == 0x80000002) {
+            memcpy(CPUBrandString, CPUInfo, sizeof(CPUInfo));
+        } else if (i == 0x80000003) {
+            memcpy(CPUBrandString + 16, CPUInfo, sizeof(CPUInfo));
+        } else if (i == 0x80000004) {
+            memcpy(CPUBrandString + 32, CPUInfo, sizeof(CPUInfo));
+        }
+    }
+    
+    return CPUBrandString;
 }
 
 #elif defined(ICE_CPU_IRIX)
@@ -458,19 +639,49 @@ ICE_CPU_API unsigned int ICE_CPU_CALLCONV ice_cpu_cores_count(void) {
 // ICE_CPU_IRIX IMPLEMENTATION    (IRIX)
 ///////////////////////////////////////////////////////////////////////////////////////////
 #include <unistd.h>
+#include <string.h>
 
 // Returns count of CPU cores device has as unsigned integer.
 ICE_CPU_API unsigned int ICE_CPU_CALLCONV ice_cpu_cores_count(void) {
     return sysconf(_SC_NPROC_ONLN);
 }
 
+// Returns CPU name used by device as string.
+ICE_CPU_API char* ICE_CPU_CALLCONV ice_cpu_name(void) {
+    char CPUBrandString[0x40];
+    unsigned int CPUInfo[4] = {0,0,0,0};
+    __cpuid(0x80000000, CPUInfo[0], CPUInfo[1], CPUInfo[2], CPUInfo[3]);
+    unsigned int nExIds = CPUInfo[0];
+    memset(CPUBrandString, 0, sizeof(CPUBrandString));
+    
+    for (unsigned int i = 0x80000000; i <= nExIds; ++i) {
+        __cpuid(i, CPUInfo[0], CPUInfo[1], CPUInfo[2], CPUInfo[3]);
+
+        if (i == 0x80000002) {
+            memcpy(CPUBrandString, CPUInfo, sizeof(CPUInfo));
+        } else if (i == 0x80000003) {
+            memcpy(CPUBrandString + 16, CPUInfo, sizeof(CPUInfo));
+        } else if (i == 0x80000004) {
+            memcpy(CPUBrandString + 32, CPUInfo, sizeof(CPUInfo));
+        }
+    }
+    
+    return CPUBrandString;
+}
+
 #elif defined(ICE_CPU_GBA)
 ///////////////////////////////////////////////////////////////////////////////////////////
 // ICE_CPU_GBA IMPLEMENTATION    (Nintendo Gameboy)
 ///////////////////////////////////////////////////////////////////////////////////////////
+
 // Returns count of CPU cores device has as unsigned integer.
 ICE_CPU_API unsigned int ICE_CPU_CALLCONV ice_cpu_cores_count(void) {
     return 1;
+}
+
+// Returns CPU name used by device as string.
+ICE_CPU_API char* ICE_CPU_CALLCONV ice_cpu_name(void) {
+    return "ARM7TDMI @ 16.78 MHz";
 }
 
 #elif defined(ICE_CPU_NDS)
@@ -480,6 +691,11 @@ ICE_CPU_API unsigned int ICE_CPU_CALLCONV ice_cpu_cores_count(void) {
 // Returns count of CPU cores device has as unsigned integer.
 ICE_CPU_API unsigned int ICE_CPU_CALLCONV ice_cpu_cores_count(void) {
     return 2;
+}
+
+// Returns CPU name used by device as string.
+ICE_CPU_API char* ICE_CPU_CALLCONV ice_cpu_name(void) {
+    return "ARM946E-S @ 67 MHz, ARM7TDMI @ 33 MHz"
 }
 
 #endif

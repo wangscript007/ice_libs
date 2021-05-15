@@ -52,10 +52,10 @@ typedef enum {
 ### Functions
 
 ```c
-ICE_CLIPBOARD_API  ice_clipboard_bool  ICE_CLIPBOARD_CALLCONV  ice_clipboard_init(void);                // Initializes clipboard, Returns ICE_CLIPBOARD_TRUE on success or ICE_CLIPBOARD_FALSE on failure.
-ICE_CLIPBOARD_API  ice_clipboard_bool  ICE_CLIPBOARD_CALLCONV  ice_clipboard_set(char* text);           // Copies string to clipboard, Returns ICE_CLIPBOARD_TRUE on success or ICE_CLIPBOARD_FALSE on failure.
-ICE_CLIPBOARD_API  char*               ICE_CLIPBOARD_CALLCONV  ice_clipboard_get(void);                 // Gets string content of clipboard, Returns latest string copied to clipboard.
-ICE_CLIPBOARD_API  ice_clipboard_bool  ICE_CLIPBOARD_CALLCONV  ice_clipboard_text(char* text);          // Is latest string copied to clipboard same as string text? Returns ICE_CLIPBOARD_TRUE if true or ICE_CLIPBOARD_FALSE if false.
-ICE_CLIPBOARD_API  ice_clipboard_bool  ICE_CLIPBOARD_CALLCONV  ice_clipboard_clear(void);               // Clears clipboard content, Returns ICE_CLIPBOARD_TRUE on success or ICE_CLIPBOARD_FALSE on failure.
-ICE_CLIPBOARD_API  ice_clipboard_bool  ICE_CLIPBOARD_CALLCONV  ice_clipboard_close(void);               // Closes (Deinitializes) clipboard, Returns ICE_CLIPBOARD_TRUE on success or ICE_CLIPBOARD_FALSE on failure.
+ice_clipboard_bool  ice_clipboard_init(void);                // Initializes clipboard, Returns ICE_CLIPBOARD_TRUE on success or ICE_CLIPBOARD_FALSE on failure.
+ice_clipboard_bool  ice_clipboard_set(char* text);           // Copies string to clipboard, Returns ICE_CLIPBOARD_TRUE on success or ICE_CLIPBOARD_FALSE on failure.
+char*               ice_clipboard_get(void);                 // Gets string content of clipboard, Returns latest string copied to clipboard.
+ice_clipboard_bool  ice_clipboard_text(char* text);          // Is latest string copied to clipboard same as string text? Returns ICE_CLIPBOARD_TRUE if true or ICE_CLIPBOARD_FALSE if false.
+ice_clipboard_bool  ice_clipboard_clear(void);               // Clears clipboard content, Returns ICE_CLIPBOARD_TRUE on success or ICE_CLIPBOARD_FALSE on failure.
+ice_clipboard_bool  ice_clipboard_close(void);               // Closes (Deinitializes) clipboard, Returns ICE_CLIPBOARD_TRUE on success or ICE_CLIPBOARD_FALSE on failure.
 ```

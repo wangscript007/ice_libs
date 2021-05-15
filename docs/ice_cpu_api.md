@@ -59,6 +59,7 @@ typedef enum {
 ### Functions
 
 ```c
-ICE_CPU_API  unsigned int    ICE_CPU_CALLCONV  ice_cpu_cores_count(void);                // Returns count of CPU cores device has as unsigned integer.
-ICE_CPU_API  ice_cpu_arch    ICE_CPU_CALLCONV  ice_cpu_get_arch(void);                   // Returns CPU architecture.
+unsigned int  ice_cpu_cores_count(void);                // Returns count of CPU cores device has as unsigned integer.
+ice_cpu_arch  ice_cpu_get_arch(void);                   // Returns CPU architecture.
+char*         ice_cpu_name(void);                       // Returns CPU name used by device as string.
 ```
