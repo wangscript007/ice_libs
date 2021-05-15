@@ -269,7 +269,6 @@ ICE_CPU_API  unsigned int    ICE_CPU_CALLCONV  ice_cpu_cores_count(void);       
 ICE_CPU_API  ice_cpu_arch    ICE_CPU_CALLCONV  ice_cpu_get_arch(void);                   // Returns CPU architecture.
 ICE_CPU_API  char*           ICE_CPU_CALLCONV  ice_cpu_name(void);                       // Returns CPU name used by device as string.
 
-
 #if defined(__cplusplus)
 }
 #endif
