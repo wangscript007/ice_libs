@@ -375,7 +375,6 @@ ICE_CPU_API char* ICE_CPU_CALLCONV ice_cpu_name(void) {
 #else
 // Returns CPU name used by device as string.
 ICE_CPU_API char* ICE_CPU_CALLCONV ice_cpu_name(void) {
-    
     unsigned int CPUInfo[4] = {0,0,0,0};
     __cpuid(0x80000000, CPUInfo[0], CPUInfo[1], CPUInfo[2], CPUInfo[3]);
     unsigned int nExIds = CPUInfo[0];
@@ -570,6 +569,8 @@ ICE_CPU_API char* ICE_CPU_CALLCONV ice_cpu_name(void) {
 #include <cpuid.h>
 #include <string.h>
 
+char CPUBrandString[0x40];
+
 // Returns count of CPU cores device has as unsigned integer.
 ICE_CPU_API unsigned int ICE_CPU_CALLCONV ice_cpu_cores_count(void) {
     return sysconf(_SC_NPROCESSORS_ONLN);
@@ -577,7 +578,6 @@ ICE_CPU_API unsigned int ICE_CPU_CALLCONV ice_cpu_cores_count(void) {
 
 // Returns CPU name used by device as string.
 ICE_CPU_API char* ICE_CPU_CALLCONV ice_cpu_name(void) {
-    char CPUBrandString[0x40];
     unsigned int CPUInfo[4] = {0,0,0,0};
     __cpuid(0x80000000, CPUInfo[0], CPUInfo[1], CPUInfo[2], CPUInfo[3]);
     unsigned int nExIds = CPUInfo[0];
@@ -605,14 +605,15 @@ ICE_CPU_API char* ICE_CPU_CALLCONV ice_cpu_name(void) {
 #include <sys/mpctl.h>
 #include <string.h>
 
+char CPUBrandString[0x40];
+
 // Returns count of CPU cores device has as unsigned integer.
 ICE_CPU_API unsigned int ICE_CPU_CALLCONV ice_cpu_cores_count(void) {
     return mpctl(MPC_GETNUMSPUS, NULL, NULL);
 }
 
 // Returns CPU name used by device as string.
-ICE_CPU_API char* ICE_CPU_CALLCONV ice_cpu_name(void) {
-    char CPUBrandString[0x40];
+ICE_CPU_API char* ICE_CPU_CALLCONV ice_cpu_name(void) {    
     unsigned int CPUInfo[4] = {0,0,0,0};
     __cpuid(0x80000000, CPUInfo[0], CPUInfo[1], CPUInfo[2], CPUInfo[3]);
     unsigned int nExIds = CPUInfo[0];
@@ -640,14 +641,15 @@ ICE_CPU_API char* ICE_CPU_CALLCONV ice_cpu_name(void) {
 #include <unistd.h>
 #include <string.h>
 
+char CPUBrandString[0x40];
+
 // Returns count of CPU cores device has as unsigned integer.
 ICE_CPU_API unsigned int ICE_CPU_CALLCONV ice_cpu_cores_count(void) {
     return sysconf(_SC_NPROC_ONLN);
 }
 
 // Returns CPU name used by device as string.
-ICE_CPU_API char* ICE_CPU_CALLCONV ice_cpu_name(void) {
-    char CPUBrandString[0x40];
+ICE_CPU_API char* ICE_CPU_CALLCONV ice_cpu_name(void) {    
     unsigned int CPUInfo[4] = {0,0,0,0};
     __cpuid(0x80000000, CPUInfo[0], CPUInfo[1], CPUInfo[2], CPUInfo[3]);
     unsigned int nExIds = CPUInfo[0];
