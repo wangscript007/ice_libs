@@ -361,7 +361,7 @@ ICE_CPU_API char* ICE_CPU_CALLCONV ice_cpu_name(void) {
         __cpuid(CPUInfo, i);
         
         if  (i == 0x80000002) {
-			memcpy(CPUBrandString, CPUInfo, sizeof(CPUInfo));
+            memcpy(CPUBrandString, CPUInfo, sizeof(CPUInfo));
         } else if  (i == 0x80000003) {
             memcpy(CPUBrandString + 16, CPUInfo, sizeof(CPUInfo));
         } else if  (i == 0x80000004) {
