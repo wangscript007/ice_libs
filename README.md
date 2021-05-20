@@ -70,6 +70,7 @@ IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
 OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
+
 For more information, please refer to <http://unlicense.org/>
 ```
 
@@ -78,6 +79,7 @@ For more information, please refer to <http://unlicense.org/>
 LICENSE B - MIT LICENSE
 ------------------------------------------------------------------------
 Copyright (c) 2021 - 2022 Rabia Alhaffar
+
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
